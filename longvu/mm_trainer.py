@@ -5,8 +5,7 @@ from typing import Dict, List, Optional
 import torch
 import torch.nn as nn
 
-from callm.projects.llava.mm_datautils import get_mm_adapter_state_maybe_zero_3
-
+from longvu.mm_datautils import get_mm_adapter_state_maybe_zero_3
 from torch.utils.data import DataLoader, Sampler
 
 from transformers import Trainer
