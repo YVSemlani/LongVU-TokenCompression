@@ -219,154 +219,160 @@ def train(args) -> None:
         data_type = line["data_type"]
         letters = line["letters"].split(",")
 
-        if os.path.exists(video_path):
-            if data_type == "video":
-                vr = VideoReader(video_path, ctx=cpu(0), num_threads=1)
-                max_frame = len(vr) - 1
-                fps = float(vr.get_avg_fps())
-                if bound:
-                    start, end = bound[0], bound[1]
-                    start_idx = max(0, round(start * fps))
+        try:
+            if os.path.exists(video_path):
+                if data_type == "video":
+                    vr = VideoReader(video_path, ctx=cpu(0), num_threads=1)
+                    max_frame = len(vr) - 1
+                    fps = float(vr.get_avg_fps())
+                    if bound:
+                        start, end = bound[0], bound[1]
+                        start_idx = max(0, round(start * fps))
+                        end_idx = min(round(end * fps), max_frame)
+                        frame_indices = np.array(
+                            [i for i in range(start_idx, end_idx, round(fps / 2))]
+                        )
+                    else:
+                        frame_indices = np.array(
+                            [i for i in range(0, len(vr), round(fps / 2))]
+                        )
+                    
+                    if len(frame_indices) == 0:
+                        print(f"Warning: No frames selected for video {video_name} at path {video_path}")
+                        print(f"Parameters: start={start if bound else 'None'}, end={end if bound else 'None'}, fps={fps}")
+                        continue
+
+                    video = []
+                    for frame_index in frame_indices:
+                        try:
+                            img = vr[frame_index].asnumpy()
+                            video.append(img)
+                        except Exception as e:
+                            print(f"Error reading frame {frame_index} from video {video_name}: {str(e)}")
+                    
+                    if not video:
+                        print(f"Warning: Failed to read any frames from video {video_name} at path {video_path}")
+                        continue
+                        
+                    video = np.stack(video)
+                else:
+                    max_frame = len(os.listdir(video_path))
+                    images_group = list()
+                    fps = 3
+                    if bound:
+                        start, end = bound[0], bound[1]
+                    else:
+                        start, end = -100000, 100000
+                    start_idx = max(1, round(start * fps))
                     end_idx = min(round(end * fps), max_frame)
-                    frame_indices = np.array(
-                        [
-                            i
-                            for i in range(
-                                start_idx,
-                                end_idx,
-                                round(fps / 2),
-                            )
-                        ]
-                    )
-                else:
-                    frame_indices = np.array(
-                        [
-                            i
-                            for i in range(
-                                0,
-                                len(vr),
-                                round(fps / 2),
-                            )
-                        ]
-                    )
-                video = []
-                for frame_index in frame_indices:
-                    img = vr[frame_index].asnumpy()
-                    video.append(img)
-                video = np.stack(video)
+                    frame_indices = [
+                        i
+                        for i in range(
+                            start_idx,
+                            end_idx,
+                            round(fps / 2),
+                        )
+                    ]
+                    for frame_index in frame_indices:
+                        img = Image.open(
+                            os.path.join(video_path, f"{frame_index:05d}.jpg")
+                        ).convert("RGB")
+                        images_group.append(np.array(img))
+                    video = np.stack(images_group)
+                
+                image_sizes = [video[0].shape[:2]]
+                video = process_images(video, image_processor, model.config)
+                video = [item.unsqueeze(0) for item in video]
             else:
-                max_frame = len(os.listdir(video_path))
-                images_group = list()
-                fps = 3
-                if bound:
-                    start, end = bound[0], bound[1]
-                else:
-                    start, end = -100000, 100000
-                start_idx = max(1, round(start * fps))
-                end_idx = min(round(end * fps), max_frame)
-                frame_indices = [
-                    i
-                    for i in range(
-                        start_idx,
-                        end_idx,
-                        round(fps / 2),
-                    )
-                ]
-                for frame_index in frame_indices:
-                    img = Image.open(
-                        os.path.join(video_path, f"{frame_index:05d}.jpg")
-                    ).convert("RGB")
-                    images_group.append(np.array(img))
-                video = np.stack(images_group)
+                print(f"Warning: Video file not found: {video_path}")
+                video = np.zeros((1, 1024, 1024, 3)).astype(np.uint8)
+                image_sizes = [(1024, 1024)]
+                video = process_images(video, image_processor, model.config)
+
+            if getattr(model.config, "mm_use_im_start_end", False):
+                qs = (
+                    DEFAULT_IM_START_TOKEN
+                    + DEFAULT_IMAGE_TOKEN
+                    + DEFAULT_IM_END_TOKEN
+                    + "\n"
+                    + qs
+                )
+            else:
+                qs = DEFAULT_IMAGE_TOKEN + "\n" + qs
+
+            conv = conv_templates[version].copy()
+            conv.append_message(conv.roles[0], qs)
+            conv.append_message(conv.roles[1], None)
+            prompt = conv.get_prompt()
+
+            input_ids = (
+                tokenizer_image_token(
+                    prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt"
+                )
+                .unsqueeze(0)
+                .cuda()
+            )
+
+            if "llama3" in version:
+                input_ids = input_ids[0][1:].unsqueeze(0)  # remove bos
+
+            stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
+            keywords = [stop_str]
+            stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
             
-            image_sizes = [video[0].shape[:2]]
-            video = process_images(video, image_processor, model.config)
-            video = [item.unsqueeze(0) for item in video]
-        else:
-            video = np.zeros((1, 1024, 1024, 3)).astype(np.uint8)
-            image_sizes = [(1024, 1024)]
-            video = process_images(video, image_processor, model.config)
+            with torch.inference_mode():
+                output_ids = model.generate(
+                    input_ids,
+                    images=video,
+                    image_sizes=image_sizes,
+                    do_sample=False,
+                    temperature=0.0,
+                    max_new_tokens=5,  
+                    use_cache=True,
+                    stopping_criteria=[stopping_criteria],
+                )
+            if isinstance(output_ids, tuple):
+                output_ids = output_ids[0]
+            pred = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[
+                0
+            ].strip()
+            if pred.endswith(stop_str):
+                pred = pred[: -len(stop_str)]
+                pred = pred.strip()
+            pred = pred.replace("Answer", "")
 
-        if getattr(model.config, "mm_use_im_start_end", False):
-            qs = (
-                DEFAULT_IM_START_TOKEN
-                + DEFAULT_IMAGE_TOKEN
-                + DEFAULT_IM_END_TOKEN
-                + "\n"
-                + qs
+            pred_answer = re.findall(
+                f"[\(,\ ]*[{letters[0]}-{letters[-1]}][\),\ ]*", pred
             )
-        else:
-            qs = DEFAULT_IMAGE_TOKEN + "\n" + qs
 
-        conv = conv_templates[version].copy()
-        conv.append_message(conv.roles[0], qs)
-        conv.append_message(conv.roles[1], None)
-        prompt = conv.get_prompt()
+            pred_answer = pred_answer[0].strip()
+            pred_answer = pred_answer.strip("()")
+            if pred_answer in letters:
+                pred_idx = letters.index(pred_answer)
+                pred = letters[pred_idx]
+            else:
+                print("pred_answer: ", pred_answer, " pred: ", pred, flush=True)
+                pred_idx = 2
+                pred = letters[pred_idx]
 
-        input_ids = (
-            tokenizer_image_token(
-                prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt"
+            ans_id = uuid.uuid4()
+            output.append(
+                {
+                    "question": line["question"],
+                    "prompt": qs,
+                    "answer": answer,
+                    "pred": pred_idx,
+                    "task_type": task_type,
+                    "answer_id": str(ans_id),
+                    "model_id": model_name,
+                    "video_name": video_name,
+                    "metadata": {},
+                }
             )
-            .unsqueeze(0)
-            .cuda()
-        )
 
-        if "llama3" in version:
-            input_ids = input_ids[0][1:].unsqueeze(0)  # remove bos
-
-        stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
-        keywords = [stop_str]
-        stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
-            
-        with torch.inference_mode():
-            output_ids = model.generate(
-                input_ids,
-                images=video,
-                image_sizes=image_sizes,
-                do_sample=False,
-                temperature=0.0,
-                max_new_tokens=5,  
-                use_cache=True,
-                stopping_criteria=[stopping_criteria],
-            )
-        if isinstance(output_ids, tuple):
-            output_ids = output_ids[0]
-        pred = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[
-            0
-        ].strip()
-        if pred.endswith(stop_str):
-            pred = pred[: -len(stop_str)]
-            pred = pred.strip()
-        pred = pred.replace("Answer", "")
-
-        pred_answer = re.findall(
-            f"[\(,\ ]*[{letters[0]}-{letters[-1]}][\),\ ]*", pred
-        )
-
-        pred_answer = pred_answer[0].strip()
-        pred_answer = pred_answer.strip("()")
-        if pred_answer in letters:
-            pred_idx = letters.index(pred_answer)
-            pred = letters[pred_idx]
-        else:
-            print("pred_answer: ", pred_answer, " pred: ", pred, flush=True)
-            pred_idx = 2
-            pred = letters[pred_idx]
-
-        ans_id = uuid.uuid4()
-        output.append(
-            {
-                "question": line["question"],
-                "prompt": qs,
-                "answer": answer,
-                "pred": pred_idx,
-                "task_type": task_type,
-                "answer_id": str(ans_id),
-                "model_id": model_name,
-                "video_name": video_name,
-                "metadata": {},
-            }
-        )
+        except Exception as e:
+            print(f"Error processing video {video_name} at path {video_path}: {str(e)}")
+            continue
 
     dist.barrier()
     dist.all_gather_object(
