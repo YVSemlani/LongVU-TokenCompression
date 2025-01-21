@@ -1,0 +1,51 @@
+[2025-01-21 14:50:45,400] torch.distributed.run: [WARNING] master_addr is only used for static rdzv_backend and when rdzv_endpoint is not specified.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/eval/eval_mvbench.py", line 424, in <module>
+    train(args)
+  File "/mnt/meg/yvs/LongVU/eval/eval_mvbench.py", line 188, in train
+    tokenizer, model, image_processor, context_len = load_pretrained_model(
+  File "/mnt/meg/yvs/LongVU/./longvu/builder.py", line 165, in load_pretrained_model
+    model = CambrianLlamaForCausalLM.from_pretrained(
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/modeling_utils.py", line 3235, in from_pretrained
+    config, model_kwargs = cls.config_class.from_pretrained(
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/configuration_utils.py", line 610, in from_pretrained
+    return cls.from_dict(config_dict, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/configuration_utils.py", line 772, in from_dict
+    config = cls(**config_dict)
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/models/llama/configuration_llama.py", line 161, in __init__
+    self._rope_scaling_validation()
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/models/llama/configuration_llama.py", line 182, in _rope_scaling_validation
+    raise ValueError(
+ValueError: `rope_scaling` must be a dictionary with two fields, `type` and `factor`, got {'factor': 32.0, 'high_freq_factor': 4.0, 'low_freq_factor': 1.0, 'original_max_position_embeddings': 8192, 'rope_type': 'llama3'}
+[2025-01-21 14:50:50,543] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 0 (pid: 1540903) of binary: /usr/bin/python3
+Traceback (most recent call last):
+  File "/home/yvs/.local/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 346, in wrapper
+    return f(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/run.py", line 806, in main
+    run(args)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/run.py", line 797, in run
+    elastic_launch(
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 134, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+eval/eval_mvbench.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-01-21_14:50:50
+  host      : mirage.ib
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 1540903)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

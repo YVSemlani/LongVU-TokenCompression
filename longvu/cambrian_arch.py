@@ -1463,13 +1463,15 @@ class CambrianMetaForCausalLM(ABC):
                     -1,
                     image_features[cur_image_idx].shape[-1],
                 )
-
+                
+                # computes the cosine similarity between each pair of consecutive frames
                 sim = F.cosine_similarity(
                     visual_emb_frame[:-1],
                     visual_emb_frame[1:],
                     dim=-1,
                 )
-
+                print(visual_emb_frame.size())
+                # groups the frames into chunks of 8
                 new_visual_emb_frames = []
                 for start_idx in range(0, len(visual_emb_frame), 8):
                     end_idx = min(start_idx + 8, len(visual_emb_frame))
@@ -1484,6 +1486,8 @@ class CambrianMetaForCausalLM(ABC):
                         chunk_feature[1:],
                         dim=-1,
                     )
+
+                    # removes frames with cosine similarity lower than the threshold
                     new_visual_emb_frame = torch.cat(
                         [
                             chunk_feature[0],
