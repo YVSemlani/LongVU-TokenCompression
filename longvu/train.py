@@ -11,11 +11,15 @@ import copy
 import datetime
 import json
 import os
+import sys
 import pathlib
 import uuid
 from dataclasses import dataclass, field
 from logging import Logger
 from typing import Dict, List, Optional, Sequence
+
+# Add the parent directory to Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
 
@@ -103,6 +107,7 @@ class ModelArguments:
     drop_threshold: float = field(default=0.8)
     frame_pos: bool = field(default=False)
     is_image_newline: bool = field(default=True)
+    spatiotemporal_compressor: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -830,6 +835,9 @@ def train() -> None:
     model_args.local_dir = model_args.output_model_filename
 
     bnb_model_from_pretrained_args = {}
+
+    # checking instation of spatiotemporal compressor
+    print(f"Spatiotemporal compressor: {model_args.spatiotemporal_compressor}")
 
     # pyre-fixme[16]: `DataClass` has no attribute `vision_tower`.
     if model_args.vision_tower_aux_list is not None:

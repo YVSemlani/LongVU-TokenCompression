@@ -1,25 +1,28 @@
 
-PREV_STAGE_CHECKPOINT=""
-PATH_TO_JSON=""
-PATH_TO_FOLDER=""
+BASE_DIR_CHECKPOINT="./checkpoints/"
+PREV_STAGE_CHECKPOINT="${BASE_DIR_CHECKPOINT}/longvu_cambrian_qwen" # checkpoint you're finetuning from
+PATH_TO_JSON="./data/nextqa/train.json"
+PATH_TO_FOLDER="./data/nextqa/"
+OUTPUT_MODEL_FILENAME="${PREV_STAGE_CHECKPOINT}_ft_debugging"
 VERSION="qwen"
 
-CUDA_LAUNCH_BLOCKING=1 TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=8 --nnodes=8 \
+CUDA_LAUNCH_BLOCKING=1 TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=8 --nnodes=1 \
 longvu/train.py \
 --output_dir "/tmp/longvu/" \
 --input_model_filename $PREV_STAGE_CHECKPOINT \
---output_model_filename "./checkpoints/cambrian_qwen/" \
+--output_model_filename $OUTPUT_MODEL_FILENAME \
 --data_path $PATH_TO_JSON \
 --image_folder $PATH_TO_FOLDER \
---model_max_length 8192 \
+--spatiotemporal_compressor None \
+--model_max_length 4096 \
 --fp16 False \
 --bf16 True \
 --log_on_each_node False \
 --logging_dir /tmp/llava/test/ \
 --num_train_epochs 1 \
 --per_device_train_batch_size 1 \
---per_device_eval_batch_size 4 \
---gradient_accumulation_steps 1 \
+--per_device_eval_batch_size 2 \
+--gradient_accumulation_steps 4 \
 --save_steps 500 \
 --eval_steps 500 \
 --logging_steps 10 \

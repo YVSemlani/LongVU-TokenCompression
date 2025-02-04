@@ -1,0 +1,122 @@
+[2025-02-03 17:57:17,072] torch.distributed.run: [WARNING] 
+[2025-02-03 17:57:17,072] torch.distributed.run: [WARNING] *****************************************
+[2025-02-03 17:57:17,072] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2025-02-03 17:57:17,072] torch.distributed.run: [WARNING] *****************************************
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 52, in <module>
+    from tensorboard.compat.tensorflow_stub.io.gfile import register_filesystem
+ModuleNotFoundError: No module named 'tensorboard'
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 52, in <module>
+    from tensorboard.compat.tensorflow_stub.io.gfile import register_filesystem
+ModuleNotFoundError: No module named 'tensorboard'
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 52, in <module>
+    from tensorboard.compat.tensorflow_stub.io.gfile import register_filesystem
+ModuleNotFoundError: No module named 'tensorboard'
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 52, in <module>
+    from tensorboard.compat.tensorflow_stub.io.gfile import register_filesystem
+ModuleNotFoundError: No module named 'tensorboard'
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 52, in <module>
+    from tensorboard.compat.tensorflow_stub.io.gfile import register_filesystem
+ModuleNotFoundError: No module named 'tensorboard'
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 52, in <module>
+    from tensorboard.compat.tensorflow_stub.io.gfile import register_filesystem
+ModuleNotFoundError: No module named 'tensorboard'
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 52, in <module>
+    from tensorboard.compat.tensorflow_stub.io.gfile import register_filesystem
+ModuleNotFoundError: No module named 'tensorboard'
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 52, in <module>
+    from tensorboard.compat.tensorflow_stub.io.gfile import register_filesystem
+ModuleNotFoundError: No module named 'tensorboard'
+[2025-02-03 17:57:27,239] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 0 (pid: 3101289) of binary: /usr/bin/python3
+Traceback (most recent call last):
+  File "/home/yvs/.local/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 346, in wrapper
+    return f(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/run.py", line 806, in main
+    run(args)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/run.py", line 797, in run
+    elastic_launch(
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 134, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+longvu/train.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2025-02-03_17:57:27
+  host      : arcee.ib
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 3101290)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[2]:
+  time      : 2025-02-03_17:57:27
+  host      : arcee.ib
+  rank      : 2 (local_rank: 2)
+  exitcode  : 1 (pid: 3101291)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[3]:
+  time      : 2025-02-03_17:57:27
+  host      : arcee.ib
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 3101292)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[4]:
+  time      : 2025-02-03_17:57:27
+  host      : arcee.ib
+  rank      : 4 (local_rank: 4)
+  exitcode  : 1 (pid: 3101293)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[5]:
+  time      : 2025-02-03_17:57:27
+  host      : arcee.ib
+  rank      : 5 (local_rank: 5)
+  exitcode  : 1 (pid: 3101294)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[6]:
+  time      : 2025-02-03_17:57:27
+  host      : arcee.ib
+  rank      : 6 (local_rank: 6)
+  exitcode  : 1 (pid: 3101295)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[7]:
+  time      : 2025-02-03_17:57:27
+  host      : arcee.ib
+  rank      : 7 (local_rank: 7)
+  exitcode  : 1 (pid: 3101296)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-02-03_17:57:27
+  host      : arcee.ib
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 3101289)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

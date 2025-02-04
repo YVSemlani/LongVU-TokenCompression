@@ -1,0 +1,129 @@
+[2025-02-03 18:01:19,653] torch.distributed.run: [WARNING] 
+[2025-02-03 18:01:19,653] torch.distributed.run: [WARNING] *****************************************
+[2025-02-03 18:01:19,653] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2025-02-03 18:01:19,653] torch.distributed.run: [WARNING] *****************************************
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1494: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1494: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1494: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1494: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1494: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1494: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1494: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1494: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1820: FutureWarning: using `--fsdp_transformer_layer_cls_to_wrap` is deprecated. Use fsdp_config instead 
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1820: FutureWarning: using `--fsdp_transformer_layer_cls_to_wrap` is deprecated. Use fsdp_config instead 
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1820: FutureWarning: using `--fsdp_transformer_layer_cls_to_wrap` is deprecated. Use fsdp_config instead 
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1820: FutureWarning: using `--fsdp_transformer_layer_cls_to_wrap` is deprecated. Use fsdp_config instead 
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1820: FutureWarning: using `--fsdp_transformer_layer_cls_to_wrap` is deprecated. Use fsdp_config instead 
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1820: FutureWarning: using `--fsdp_transformer_layer_cls_to_wrap` is deprecated. Use fsdp_config instead 
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1820: FutureWarning: using `--fsdp_transformer_layer_cls_to_wrap` is deprecated. Use fsdp_config instead 
+  warnings.warn(
+/home/yvs/.local/lib/python3.10/site-packages/transformers/training_args.py:1820: FutureWarning: using `--fsdp_transformer_layer_cls_to_wrap` is deprecated. Use fsdp_config instead 
+  warnings.warn(
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 1129, in <module>
+    train()
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 860, in train
+    raise NotImplementedError(
+NotImplementedError: facebook/opt-125m is not supported yet
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 1129, in <module>
+Traceback (most recent call last):
+      File "/mnt/meg/yvs/LongVU/longvu/train.py", line 1129, in <module>
+train()
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 860, in train
+    raise NotImplementedError(
+NotImplementedError: facebook/opt-125m is not supported yet
+    train()
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 860, in train
+    raise NotImplementedError(
+NotImplementedError: facebook/opt-125m is not supported yet
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 1129, in <module>
+    train()
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 860, in train
+    raise NotImplementedError(
+NotImplementedError: facebook/opt-125m is not supported yet
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 1129, in <module>
+    train()
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 860, in train
+    raise NotImplementedError(
+NotImplementedError: facebook/opt-125m is not supported yet
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 1129, in <module>
+    train()
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 860, in train
+    raise NotImplementedError(
+NotImplementedError: facebook/opt-125m is not supported yet
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 1129, in <module>
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 1129, in <module>
+        train()train()
+
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 860, in train
+  File "/mnt/meg/yvs/LongVU/longvu/train.py", line 860, in train
+        raise NotImplementedError(raise NotImplementedError(
+
+NotImplementedErrorNotImplementedError: : facebook/opt-125m is not supported yetfacebook/opt-125m is not supported yet
+
+[2025-02-03 18:01:34,713] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 3103970 closing signal SIGTERM
+[2025-02-03 18:01:34,713] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 3103971 closing signal SIGTERM
+[2025-02-03 18:01:34,713] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 3103972 closing signal SIGTERM
+[2025-02-03 18:01:34,713] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 3103973 closing signal SIGTERM
+[2025-02-03 18:01:34,713] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 3103974 closing signal SIGTERM
+[2025-02-03 18:01:34,714] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 3103975 closing signal SIGTERM
+[2025-02-03 18:01:34,714] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 3103976 closing signal SIGTERM
+[2025-02-03 18:01:35,350] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 0 (pid: 3103969) of binary: /usr/bin/python3
+Traceback (most recent call last):
+  File "/home/yvs/.local/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 346, in wrapper
+    return f(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/run.py", line 806, in main
+    run(args)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/run.py", line 797, in run
+    elastic_launch(
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 134, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+longvu/train.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-02-03_18:01:34
+  host      : arcee.ib
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 3103969)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
