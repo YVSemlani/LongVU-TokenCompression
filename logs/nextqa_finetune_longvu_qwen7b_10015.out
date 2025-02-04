@@ -28,93 +28,96 @@ Requirement already satisfied: deepspeed==0.12.2 in /home/yvs/.local/lib/python3
 Requirement already satisfied: protobuf in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 27)) (5.29.3)
 Requirement already satisfied: iopath in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 28)) (0.1.10)
 Requirement already satisfied: tensorboard in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 29)) (2.18.0)
-Requirement already satisfied: tqdm>=4.42.1 in /usr/local/lib/python3.10/dist-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (4.66.5)
-Requirement already satisfied: packaging>=20.9 in /usr/local/lib/python3.10/dist-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (24.1)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in /usr/local/lib/python3.10/dist-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (4.12.2)
 Requirement already satisfied: filelock in /usr/local/lib/python3.10/dist-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (3.16.1)
 Requirement already satisfied: fsspec>=2023.5.0 in /usr/local/lib/python3.10/dist-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (2024.9.0)
+Requirement already satisfied: tqdm>=4.42.1 in /usr/local/lib/python3.10/dist-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (4.66.5)
 Requirement already satisfied: pyyaml>=5.1 in /usr/lib/python3/dist-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (5.4.1)
-Requirement already satisfied: typing-extensions>=3.7.4.3 in /usr/local/lib/python3.10/dist-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (4.12.2)
+Requirement already satisfied: packaging>=20.9 in /usr/local/lib/python3.10/dist-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (24.1)
+Requirement already satisfied: jinja2 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (3.1.5)
+Requirement already satisfied: nvidia-cufft-cu12==11.0.2.54 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (11.0.2.54)
+Requirement already satisfied: nvidia-cusolver-cu12==11.4.5.107 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (11.4.5.107)
+Requirement already satisfied: triton==2.1.0 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (2.1.0)
 Requirement already satisfied: networkx in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (3.3)
 Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.1.105 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.105)
-Requirement already satisfied: nvidia-cusparse-cu12==12.1.0.106 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.0.106)
-Requirement already satisfied: nvidia-cublas-cu12==12.1.3.1 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.3.1)
-Requirement already satisfied: sympy in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (1.13.3)
-Requirement already satisfied: nvidia-cuda-cupti-cu12==12.1.105 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.105)
-Requirement already satisfied: nvidia-cudnn-cu12==8.9.2.26 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (8.9.2.26)
-Requirement already satisfied: nvidia-cufft-cu12==11.0.2.54 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (11.0.2.54)
-Requirement already satisfied: nvidia-nvtx-cu12==12.1.105 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.105)
-Requirement already satisfied: triton==2.1.0 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (2.1.0)
 Requirement already satisfied: nvidia-cuda-runtime-cu12==12.1.105 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.105)
-Requirement already satisfied: jinja2 in /usr/lib/python3/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (3.0.3)
-Requirement already satisfied: nvidia-cusolver-cu12==11.4.5.107 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (11.4.5.107)
+Requirement already satisfied: sympy in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (1.13.3)
+Requirement already satisfied: nvidia-cusparse-cu12==12.1.0.106 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.0.106)
 Requirement already satisfied: nvidia-nccl-cu12==2.18.1 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (2.18.1)
 Requirement already satisfied: nvidia-curand-cu12==10.3.2.106 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (10.3.2.106)
-Requirement already satisfied: regex!=2019.12.17 in /home/yvs/.local/lib/python3.10/site-packages (from transformers==4.42.4->-r requirements.txt (line 5)) (2024.11.6)
+Requirement already satisfied: nvidia-cublas-cu12==12.1.3.1 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.3.1)
+Requirement already satisfied: nvidia-nvtx-cu12==12.1.105 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.105)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.1.105 in /usr/local/lib/python3.10/dist-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.105)
+Requirement already satisfied: nvidia-cudnn-cu12==8.9.2.26 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (8.9.2.26)
 Requirement already satisfied: safetensors>=0.4.1 in /home/yvs/.local/lib/python3.10/site-packages (from transformers==4.42.4->-r requirements.txt (line 5)) (0.5.2)
+Requirement already satisfied: regex!=2019.12.17 in /home/yvs/.local/lib/python3.10/site-packages (from transformers==4.42.4->-r requirements.txt (line 5)) (2024.11.6)
 Requirement already satisfied: psutil in /home/yvs/.local/lib/python3.10/site-packages (from accelerate==0.34.2->-r requirements.txt (line 9)) (6.1.1)
-Requirement already satisfied: threadpoolctl>=2.0.0 in /home/yvs/.local/lib/python3.10/site-packages (from scikit-learn==1.2.2->-r requirements.txt (line 14)) (3.5.0)
 Requirement already satisfied: scipy>=1.3.2 in /home/yvs/.local/lib/python3.10/site-packages (from scikit-learn==1.2.2->-r requirements.txt (line 14)) (1.15.1)
+Requirement already satisfied: threadpoolctl>=2.0.0 in /home/yvs/.local/lib/python3.10/site-packages (from scikit-learn==1.2.2->-r requirements.txt (line 14)) (3.5.0)
 Requirement already satisfied: joblib>=1.1.1 in /home/yvs/.local/lib/python3.10/site-packages (from scikit-learn==1.2.2->-r requirements.txt (line 14)) (1.4.2)
+Requirement already satisfied: websockets>=10.0 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (14.2)
 Requirement already satisfied: semantic-version in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (2.10.0)
 Requirement already satisfied: markupsafe in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.0.2)
-Requirement already satisfied: markdown-it-py[linkify]>=2.0.0 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (2.2.0)
-Requirement already satisfied: pydub in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.25.1)
-Requirement already satisfied: websockets>=10.0 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (14.2)
-Requirement already satisfied: python-multipart in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.0.20)
-Requirement already satisfied: mdit-py-plugins<=0.3.3 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.3.3)
+Requirement already satisfied: aiohttp in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.11.11)
 Requirement already satisfied: pygments>=2.12.0 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (2.19.1)
+Requirement already satisfied: orjson in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.10.15)
+Requirement already satisfied: matplotlib in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.10.0)
+Requirement already satisfied: pydub in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.25.1)
 Requirement already satisfied: pandas in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (2.2.3)
 Requirement already satisfied: altair>=4.2.0 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (5.5.0)
-Requirement already satisfied: ffmpy in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.5.0)
-Requirement already satisfied: matplotlib in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.10.0)
 Requirement already satisfied: pillow in /usr/local/lib/python3.10/dist-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (10.4.0)
+Requirement already satisfied: ffmpy in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.5.0)
 Requirement already satisfied: aiofiles in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (24.1.0)
-Requirement already satisfied: orjson in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.10.15)
-Requirement already satisfied: aiohttp in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.11.11)
+Requirement already satisfied: markdown-it-py[linkify]>=2.0.0 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (2.2.0)
+Requirement already satisfied: python-multipart in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.0.20)
+Requirement already satisfied: mdit-py-plugins<=0.3.3 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.3.3)
 Requirement already satisfied: certifi in /usr/lib/python3/dist-packages (from httpx==0.24.0->-r requirements.txt (line 18)) (2020.6.20)
+Requirement already satisfied: idna in /usr/lib/python3/dist-packages (from httpx==0.24.0->-r requirements.txt (line 18)) (3.3)
 Requirement already satisfied: httpcore<0.18.0,>=0.15.0 in /home/yvs/.local/lib/python3.10/site-packages (from httpx==0.24.0->-r requirements.txt (line 18)) (0.17.3)
 Requirement already satisfied: sniffio in /home/yvs/.local/lib/python3.10/site-packages (from httpx==0.24.0->-r requirements.txt (line 18)) (1.3.1)
-Requirement already satisfied: idna in /usr/lib/python3/dist-packages (from httpx==0.24.0->-r requirements.txt (line 18)) (3.3)
-Requirement already satisfied: hjson in /home/yvs/.local/lib/python3.10/site-packages (from deepspeed==0.12.2->-r requirements.txt (line 26)) (3.1.0)
 Requirement already satisfied: pynvml in /home/yvs/.local/lib/python3.10/site-packages (from deepspeed==0.12.2->-r requirements.txt (line 26)) (12.0.0)
+Requirement already satisfied: hjson in /home/yvs/.local/lib/python3.10/site-packages (from deepspeed==0.12.2->-r requirements.txt (line 26)) (3.1.0)
 Requirement already satisfied: py-cpuinfo in /home/yvs/.local/lib/python3.10/site-packages (from deepspeed==0.12.2->-r requirements.txt (line 26)) (9.0.0)
 Requirement already satisfied: nvidia-nvjitlink-cu12 in /usr/local/lib/python3.10/dist-packages (from nvidia-cusolver-cu12==11.4.5.107->torch==2.1.2->-r requirements.txt (line 2)) (12.6.68)
 Requirement already satisfied: h11>=0.8 in /home/yvs/.local/lib/python3.10/site-packages (from uvicorn->-r requirements.txt (line 19)) (0.14.0)
 Requirement already satisfied: click>=7.0 in /usr/lib/python3/dist-packages (from uvicorn->-r requirements.txt (line 19)) (8.0.3)
 Requirement already satisfied: starlette<0.42.0,>=0.40.0 in /home/yvs/.local/lib/python3.10/site-packages (from fastapi->-r requirements.txt (line 20)) (0.41.3)
 Requirement already satisfied: portalocker in /usr/local/lib/python3.10/dist-packages (from iopath->-r requirements.txt (line 28)) (2.10.1)
-Requirement already satisfied: markdown>=2.6.8 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (3.7)
 Requirement already satisfied: setuptools>=41.0.0 in /usr/lib/python3/dist-packages (from tensorboard->-r requirements.txt (line 29)) (59.6.0)
-Requirement already satisfied: absl-py>=0.4 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (2.1.0)
-Requirement already satisfied: grpcio>=1.48.2 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (1.70.0)
-Requirement already satisfied: six>1.9 in /usr/lib/python3/dist-packages (from tensorboard->-r requirements.txt (line 29)) (1.16.0)
-Requirement already satisfied: werkzeug>=1.0.1 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (3.1.3)
 Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (0.7.2)
+Requirement already satisfied: six>1.9 in /usr/lib/python3/dist-packages (from tensorboard->-r requirements.txt (line 29)) (1.16.0)
+Requirement already satisfied: grpcio>=1.48.2 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (1.70.0)
+Requirement already satisfied: absl-py>=0.4 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (2.1.0)
+Requirement already satisfied: werkzeug>=1.0.1 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (3.1.3)
+Requirement already satisfied: markdown>=2.6.8 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (3.7)
 Requirement already satisfied: narwhals>=1.14.2 in /home/yvs/.local/lib/python3.10/site-packages (from altair>=4.2.0->gradio==3.35.2->-r requirements.txt (line 15)) (1.23.0)
 Requirement already satisfied: jsonschema>=3.0 in /usr/lib/python3/dist-packages (from altair>=4.2.0->gradio==3.35.2->-r requirements.txt (line 15)) (3.2.0)
 Requirement already satisfied: anyio<5.0,>=3.0 in /home/yvs/.local/lib/python3.10/site-packages (from httpcore<0.18.0,>=0.15.0->httpx==0.24.0->-r requirements.txt (line 18)) (4.8.0)
 Requirement already satisfied: mdurl~=0.1 in /home/yvs/.local/lib/python3.10/site-packages (from markdown-it-py[linkify]>=2.0.0->gradio==3.35.2->-r requirements.txt (line 15)) (0.1.2)
 Requirement already satisfied: linkify-it-py<3,>=1 in /home/yvs/.local/lib/python3.10/site-packages (from markdown-it-py[linkify]>=2.0.0->gradio==3.35.2->-r requirements.txt (line 15)) (2.0.3)
-Requirement already satisfied: aiosignal>=1.1.2 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (1.3.2)
+Requirement already satisfied: aiohappyeyeballs>=2.3.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (2.4.4)
 Requirement already satisfied: propcache>=0.2.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (0.2.1)
 Requirement already satisfied: multidict<7.0,>=4.5 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (6.1.0)
-Requirement already satisfied: frozenlist>=1.1.1 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (1.5.0)
 Requirement already satisfied: attrs>=17.3.0 in /usr/lib/python3/dist-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (21.2.0)
-Requirement already satisfied: aiohappyeyeballs>=2.3.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (2.4.4)
-Requirement already satisfied: yarl<2.0,>=1.17.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (1.18.3)
 Requirement already satisfied: async-timeout<6.0,>=4.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (5.0.1)
-Requirement already satisfied: kiwisolver>=1.3.1 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (1.4.8)
-Requirement already satisfied: fonttools>=4.22.0 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (4.55.4)
-Requirement already satisfied: pyparsing>=2.3.1 in /usr/lib/python3/dist-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (2.4.7)
+Requirement already satisfied: frozenlist>=1.1.1 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (1.5.0)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (1.18.3)
+Requirement already satisfied: aiosignal>=1.1.2 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (1.3.2)
 Requirement already satisfied: cycler>=0.10 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (0.12.1)
-Requirement already satisfied: contourpy>=1.0.1 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (1.3.1)
 Requirement already satisfied: python-dateutil>=2.7 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (2.9.0.post0)
-Requirement already satisfied: tzdata>=2022.7 in /home/yvs/.local/lib/python3.10/site-packages (from pandas->gradio==3.35.2->-r requirements.txt (line 15)) (2025.1)
+Requirement already satisfied: contourpy>=1.0.1 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (1.3.1)
+Requirement already satisfied: pyparsing>=2.3.1 in /usr/lib/python3/dist-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (2.4.7)
+Requirement already satisfied: fonttools>=4.22.0 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (4.55.4)
+Requirement already satisfied: kiwisolver>=1.3.1 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (1.4.8)
 Requirement already satisfied: pytz>=2020.1 in /usr/lib/python3/dist-packages (from pandas->gradio==3.35.2->-r requirements.txt (line 15)) (2022.1)
+Requirement already satisfied: tzdata>=2022.7 in /home/yvs/.local/lib/python3.10/site-packages (from pandas->gradio==3.35.2->-r requirements.txt (line 15)) (2025.1)
 Requirement already satisfied: nvidia-ml-py<13.0.0a0,>=12.0.0 in /home/yvs/.local/lib/python3.10/site-packages (from pynvml->deepspeed==0.12.2->-r requirements.txt (line 26)) (12.560.30)
 Requirement already satisfied: mpmath<1.4,>=1.1.0 in /usr/local/lib/python3.10/dist-packages (from sympy->torch==2.1.2->-r requirements.txt (line 2)) (1.3.0)
 Requirement already satisfied: exceptiongroup>=1.0.2 in /home/yvs/.local/lib/python3.10/site-packages (from anyio<5.0,>=3.0->httpcore<0.18.0,>=0.15.0->httpx==0.24.0->-r requirements.txt (line 18)) (1.2.2)
 Requirement already satisfied: uc-micro-py in /home/yvs/.local/lib/python3.10/site-packages (from linkify-it-py<3,>=1->markdown-it-py[linkify]>=2.0.0->gradio==3.35.2->-r requirements.txt (line 15)) (1.0.3)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: jinja2>=3.1.0 in /home/yvs/.local/lib/python3.10/site-packages (3.1.5)
+Requirement already satisfied: MarkupSafe>=2.0 in /home/yvs/.local/lib/python3.10/site-packages (from jinja2>=3.1.0) (3.0.2)
 NUM_GPUS: 8
 Spatiotemporal compressor: NoneSpatiotemporal compressor: None
 Spatiotemporal compressor: None
@@ -124,3 +127,63 @@ Spatiotemporal compressor: None
 Spatiotemporal compressor: None
 Spatiotemporal compressor: None
 
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+[2025-02-04 13:26:54,186] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-04 13:26:54,342] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-04 13:26:54,592] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-04 13:26:54,656] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-04 13:26:54,727] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-04 13:26:55,073] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-04 13:26:55,087] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-04 13:26:55,162] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+{'loss': 0.7357, 'grad_norm': 21.308725357055664, 'learning_rate': 1.5625e-06, 'epoch': 0.01}
+{'loss': 0.1083, 'grad_norm': 0.9315409064292908, 'learning_rate': 3.125e-06, 'epoch': 0.02}
+{'loss': 0.0035, 'grad_norm': 0.5010828375816345, 'learning_rate': 4.6875000000000004e-06, 'epoch': 0.03}
+{'loss': 0.0023, 'grad_norm': 0.04288458451628685, 'learning_rate': 4.999261539494765e-06, 'epoch': 0.04}
+{'loss': 0.0078, 'grad_norm': 3.855442523956299, 'learning_rate': 4.996262291366815e-06, 'epoch': 0.05}
+{'loss': 0.0074, 'grad_norm': 2.471724510192871, 'learning_rate': 4.990958868160426e-06, 'epoch': 0.06}
+{'loss': 0.0053, 'grad_norm': 0.6649408340454102, 'learning_rate': 4.983356165200752e-06, 'epoch': 0.07}
+{'loss': 0.011, 'grad_norm': 0.4344600439071655, 'learning_rate': 4.973461200163277e-06, 'epoch': 0.07}
+{'loss': 0.0062, 'grad_norm': 0.6859345436096191, 'learning_rate': 4.961283106596155e-06, 'epoch': 0.08}
+{'loss': 0.0087, 'grad_norm': 0.5245504379272461, 'learning_rate': 4.9468331254894855e-06, 'epoch': 0.09}
+{'loss': 0.0074, 'grad_norm': 0.6752815246582031, 'learning_rate': 4.930124594899314e-06, 'epoch': 0.1}
+{'loss': 0.0086, 'grad_norm': 0.9415287375450134, 'learning_rate': 4.911172937635942e-06, 'epoch': 0.11}
+{'loss': 0.0097, 'grad_norm': 1.040841817855835, 'learning_rate': 4.889995647027901e-06, 'epoch': 0.12}
+{'loss': 0.0088, 'grad_norm': 0.718682587146759, 'learning_rate': 4.866612270774732e-06, 'epoch': 0.13}
+{'loss': 0.0074, 'grad_norm': 0.5478463172912598, 'learning_rate': 4.841044392903482e-06, 'epoch': 0.14}
+{'loss': 0.0073, 'grad_norm': 1.6845108270645142, 'learning_rate': 4.813315613845564e-06, 'epoch': 0.15}
+{'loss': 0.0073, 'grad_norm': 0.785375714302063, 'learning_rate': 4.783451528652382e-06, 'epoch': 0.16}
+{'loss': 0.0081, 'grad_norm': 1.8608801364898682, 'learning_rate': 4.75147970336981e-06, 'epoch': 0.17}
+{'loss': 0.0084, 'grad_norm': 2.007488250732422, 'learning_rate': 4.7174296495933595e-06, 'epoch': 0.18}
+{'loss': 0.009, 'grad_norm': 1.593198537826538, 'learning_rate': 4.6813327972274925e-06, 'epoch': 0.19}
+{'loss': 0.0079, 'grad_norm': 1.1902287006378174, 'learning_rate': 4.643222465474248e-06, 'epoch': 0.2}
+{'loss': 0.004, 'grad_norm': 0.23346558213233948, 'learning_rate': 4.603133832077953e-06, 'epoch': 0.21}
+{'loss': 0.0086, 'grad_norm': 1.2749031782150269, 'learning_rate': 4.561103900854401e-06, 'epoch': 0.22}
+{'loss': 0.0062, 'grad_norm': 0.955917477607727, 'learning_rate': 4.517171467534477e-06, 'epoch': 0.22}
+{'loss': 0.0062, 'grad_norm': 0.36304154992103577, 'learning_rate': 4.471377083953753e-06, 'epoch': 0.23}
+{'loss': 0.0085, 'grad_norm': 1.1018691062927246, 'learning_rate': 4.423763020621123e-06, 'epoch': 0.24}
+{'loss': 0.0103, 'grad_norm': 0.905067503452301, 'learning_rate': 4.374373227700993e-06, 'epoch': 0.25}
+{'loss': 0.0055, 'grad_norm': 1.102353811264038, 'learning_rate': 4.323253294445092e-06, 'epoch': 0.26}
+{'loss': 0.011, 'grad_norm': 1.1224743127822876, 'learning_rate': 4.270450407111299e-06, 'epoch': 0.27}
+{'loss': 0.0103, 'grad_norm': 0.1320752501487732, 'learning_rate': 4.216013305408373e-06, 'epoch': 0.28}
+{'loss': 0.0085, 'grad_norm': 0.5236379504203796, 'learning_rate': 4.159992237506756e-06, 'epoch': 0.29}
+{'loss': 0.0093, 'grad_norm': 0.6681289672851562, 'learning_rate': 4.1024389136569985e-06, 'epoch': 0.3}
+{'loss': 0.0097, 'grad_norm': 1.470473289489746, 'learning_rate': 4.0434064584586095e-06, 'epoch': 0.31}
+{'loss': 0.0047, 'grad_norm': 0.4676927924156189, 'learning_rate': 3.982949361823388e-06, 'epoch': 0.32}
+{'loss': 0.0064, 'grad_norm': 1.4004731178283691, 'learning_rate': 3.921123428678512e-06, 'epoch': 0.33}
+{'loss': 0.004, 'grad_norm': 0.5120647549629211, 'learning_rate': 3.857985727455788e-06, 'epoch': 0.34}
+{'loss': 0.0072, 'grad_norm': 0.7612846493721008, 'learning_rate': 3.793594537414642e-06, 'epoch': 0.35}
+{'loss': 0.0062, 'grad_norm': 0.05652187392115593, 'learning_rate': 3.7280092948474367e-06, 'epoch': 0.36}
+{'loss': 0.0057, 'grad_norm': 0.045101623982191086, 'learning_rate': 3.6612905382167983e-06, 'epoch': 0.37}
+{'loss': 0.0053, 'grad_norm': 1.2265679836273193, 'learning_rate': 3.593499852275591e-06, 'epoch': 0.37}
+{'loss': 0.0097, 'grad_norm': 0.9379575252532959, 'learning_rate': 3.5246998112210995e-06, 'epoch': 0.38}
+{'loss': 0.0052, 'grad_norm': 0.7834972143173218, 'learning_rate': 3.454953920935915e-06, 'epoch': 0.39}
+{'loss': 0.0092, 'grad_norm': 0.5281578898429871, 'learning_rate': 3.3843265603688262e-06, 'epoch': 0.4}
+{'loss': 0.0075, 'grad_norm': 0.814734160900116, 'learning_rate': 3.3128829221098256e-06, 'epoch': 0.41}

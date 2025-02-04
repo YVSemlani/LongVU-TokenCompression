@@ -54,6 +54,6 @@ longvu/train.py \
 --query_num_list "[144]" \
 --resume True \
 --lowres_token 8 \
---video_fps 1 \
---highres True \
+--video_fps 0.2 \
+--highres False \
 --drop_threshold 0.8 \
