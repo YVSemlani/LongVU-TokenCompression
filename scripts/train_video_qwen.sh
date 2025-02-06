@@ -6,6 +6,8 @@ PATH_TO_FOLDER="./data/nextqa/"
 OUTPUT_MODEL_FILENAME="${PREV_STAGE_CHECKPOINT}_ft_debugging"
 VERSION="qwen"
 
+DEEPSPEED_CONFIG_FILE="./deepspeed/zero2.json"
+
 CUDA_LAUNCH_BLOCKING=1 TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=8 --nnodes=1 \
 longvu/train.py \
 --output_dir "/tmp/longvu/" \
@@ -46,8 +48,6 @@ longvu/train.py \
 --tune_mm_mlp_adapter False \
 --freeze_mm_mlp_adapter False \
 --freeze_backbone False \
---fsdp "full_shard auto_wrap" \
---fsdp_transformer_layer_cls_to_wrap 'Qwen2DecoderLayer' \
 --gradient_checkpointing True \
 --mm_projector_type sva \
 --image_token_len 144 \
@@ -57,3 +57,7 @@ longvu/train.py \
 --video_fps 0.2 \
 --highres False \
 --drop_threshold 0.8 \
+--deepspeed $DEEPSPEED_CONFIG_FILE \
+
+#--fsdp "full_shard auto_wrap" \
+#--fsdp_transformer_layer_cls_to_wrap 'Qwen2DecoderLayer' \
