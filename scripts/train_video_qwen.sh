@@ -3,7 +3,7 @@ BASE_DIR_CHECKPOINT="./checkpoints/"
 PREV_STAGE_CHECKPOINT="${BASE_DIR_CHECKPOINT}/longvu_cambrian_qwen" # checkpoint you're finetuning from
 PATH_TO_JSON="./data/nextqa/train.json"
 PATH_TO_FOLDER="./data/nextqa/"
-OUTPUT_MODEL_FILENAME="${PREV_STAGE_CHECKPOINT}_ft_debugging"
+OUTPUT_MODEL_FILENAME="${PREV_STAGE_CHECKPOINT}_nextqa_ft"
 VERSION="qwen"
 
 DEEPSPEED_CONFIG_FILE="./deepspeed/zero2.json"
