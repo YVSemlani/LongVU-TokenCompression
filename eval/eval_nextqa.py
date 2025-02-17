@@ -111,6 +111,12 @@ class EvalDataset(torch.utils.data.IterableDataset):
 def train(args) -> None:
     dist.init_process_group(backend="nccl", timeout=datetime.timedelta(hours=8))
     
+
+    # Get local rank and set device accordingly
+    local_rank = int(os.environ.get("LOCAL_RANK", 0))
+    torch.cuda.set_device(local_rank)
+
+
     version = args.version
     model_name = args.model_name
     model_path = args.model_path
@@ -120,7 +126,7 @@ def train(args) -> None:
         model_path,  
         None,
         model_name,
-        device_map=None,
+        device_map={"": local_rank},
     )
     model.get_model().config.drop_threshold = 0.8
     model.config.use_cache = True

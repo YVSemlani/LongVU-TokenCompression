@@ -3,7 +3,7 @@
 #SBATCH --job-name=longvu_eval_nextqa
 #SBATCH --output=/mnt/meg/yvs/LongVU/logs/eval_nextqa_%j.out
 #SBATCH --error=/mnt/meg/yvs/LongVU/logs/eval_nextqa_%j.err
-#SBATCH --gpus=1
+#SBATCH --gpus=2
 
 cd /mnt/meg/yvs/LongVU
 
