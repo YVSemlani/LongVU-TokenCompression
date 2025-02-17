@@ -118,3 +118,5 @@ Requirement already satisfied: uc-micro-py in /home/yvs/.local/lib/python3.10/si
 NUM_GPUS: 1
 Warning: No frames selected for video 5W1Z7 at path ./data/MVBench/video/star/Charades_v1_480/5W1Z7.mp4
 Parameters: start=7.5, end=7.5, fps=30.0
+Accuracy:  65.2413103275819
+Task ccuracy {'Action Sequence': 77.0, 'Action Prediction': 63.5, 'Action Antonym': 79.5, 'Fine-grained Action': 51.5, 'Unexpected Action': 69.5, 'Object Existence': 92.5, 'Object Interaction': 75.87939698492463, 'Object Shuffle': 37.0, 'Moving Direction': 88.0, 'Action Localization': 48.0, 'Scene Transition': 94.0, 'Action Count': 52.5, 'Moving Count': 79.0, 'Moving Attribute': 93.0, 'State Change': 48.0, 'Fine-grained Pose': 47.5, 'Character Order': 59.5, 'Egocentric Navigation': 28.0, 'Episodic Reasoning': 55.0, 'Counterfactual Inference': 66.0}

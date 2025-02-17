@@ -1,63 +1,0 @@
-[2025-02-15 19:03:58,896] torch.distributed.run: [WARNING] master_addr is only used for static rdzv_backend and when rdzv_endpoint is not specified.
-Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
-Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
-Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:02,  1.35it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.37it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.45it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:02<00:00,  1.99it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:02<00:00,  1.72it/s]
-  0%|          | 0/4996 [00:00<?, ?it/s]/home/yvs/.local/lib/python3.10/site-packages/transformers/generation/configuration_utils.py:540: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
-  warnings.warn(
-The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
-Setting `pad_token_id` to `eos_token_id`:151645 for open-end generation.
-The attention mask is not set and cannot be inferred from input because pad token is same as eos token.As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
-  0%|          | 1/4996 [00:00<55:40,  1.50it/s]The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
-Setting `pad_token_id` to `eos_token_id`:151645 for open-end generation.
-  0%|          | 2/4996 [00:00<35:24,  2.35it/s]The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
-Setting `pad_token_id` to `eos_token_id`:151645 for open-end generation.
-  0%|          | 3/4996 [00:01<28:59,  2.87it/s]The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
-Setting `pad_token_id` to `eos_token_id`:151645 for open-end generation.
-  0%|          | 4/4996 [00:01<25:43,  3.23it/s]The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
-Setting `pad_token_id` to `eos_token_id`:151645 for open-end generation.
-  0%|          | 5/4996 [00:01<23:52,  3.48it/s]The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
-Setting `pad_token_id` to `eos_token_id`:151645 for open-end generation.
-  0%|          | 6/4996 [00:01<22:44,  3.66it/s]The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
-Setting `pad_token_id` to `eos_token_id`:151645 for open-end generation.
-  0%|          | 7/4996 [00:02<22:02,  3.77it/s]The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
-Setting `pad_token_id` to `eos_token_id`:151645 for open-end generation.
-  0%|          | 8/4996 [00:02<21:43,  3.83it/s]The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
-Setting `pad_token_id` to `eos_token_id`:151645 for open-end generation.
-  0%|          | 8/4996 [00:02<27:46,  2.99it/s]
-Traceback (most recent call last):
-  File "/mnt/meg/yvs/LongVU/eval/eval_nextqa.py", line 328, in <module>
-    train(args)
-  File "/mnt/meg/yvs/LongVU/eval/eval_nextqa.py", line 243, in train
-    pred_answer = pred_answer[0].strip()
-IndexError: list index out of range
-[2025-02-15 19:06:29,191] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 0 (pid: 318049) of binary: /usr/bin/python3
-Traceback (most recent call last):
-  File "/home/yvs/.local/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 346, in wrapper
-    return f(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/run.py", line 806, in main
-    run(args)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/run.py", line 797, in run
-    elastic_launch(
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 134, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
-    raise ChildFailedError(
-torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
-============================================================
-eval/eval_nextqa.py FAILED
-------------------------------------------------------------
-Failures:
-  <NO_OTHER_FAILURES>
-------------------------------------------------------------
-Root Cause (first observed failure):
-[0]:
-  time      : 2025-02-15_19:06:29
-  host      : arcee.ib
-  rank      : 0 (local_rank: 0)
-  exitcode  : 1 (pid: 318049)
-  error_file: <N/A>
-  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
-============================================================

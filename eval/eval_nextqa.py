@@ -37,11 +37,84 @@ from longvu.mm_datautils import (
     tokenizer_image_token,
 )
 
-from decord import cpu, VideoReader  # @manual=fbsource//third-party/pypi/decord:decord
+from decord import cpu, VideoReader  
 from torch import distributed as dist
 from tqdm import tqdm
 
 from transformers.trainer_pt_utils import IterableDatasetShard
+
+tasks = {
+    "Action Sequence": (
+        "action_sequence.json",
+        "star/Charades_v1_480/",
+        "video",
+        True,
+    ),  # has start & end
+    "Action Prediction": (
+        "action_prediction.json",
+        "star/Charades_v1_480/",
+        "video",
+        True,
+    ),  # has start & end
+    "Action Antonym": ("action_antonym.json", "ssv2_video/", "video", False),
+    "Fine-grained Action": (
+        "fine_grained_action.json",
+        "Moments_in_Time_Raw/videos/",
+        "video",
+        False,
+    ),
+    "Unexpected Action": ("unexpected_action.json", "FunQA_test/test/", "video", False),
+    "Object Existence": (
+        "object_existence.json",
+        "clevrer/video_validation/",
+        "video",
+        False,
+    ),
+    "Object Interaction": (
+        "object_interaction.json",
+        "star/Charades_v1_480/",
+        "video",
+        True,
+    ),  # has start & end
+    "Object Shuffle": ("object_shuffle.json", "perception/videos/", "video", False),
+    "Moving Direction": (
+        "moving_direction.json",
+        "clevrer/video_validation/",
+        "video",
+        False,
+    ),
+    "Action Localization": (
+        "action_localization.json",
+        "sta/sta_video/",
+        "video",
+        True,
+    ),  # has start & end
+    "Scene Transition": ("scene_transition.json", "scene_qa/video/", "video", False),
+    "Action Count": ("action_count.json", "perception/videos/", "video", False),
+    "Moving Count": ("moving_count.json", "clevrer/video_validation/", "video", False),
+    "Moving Attribute": (
+        "moving_attribute.json",
+        "clevrer/video_validation/",
+        "video",
+        False,
+    ),
+    "State Change": ("state_change.json", "perception/videos/", "video", False),
+    "Fine-grained Pose": ("fine_grained_pose.json", "nturgbd/", "video", False),
+    "Character Order": ("character_order.json", "perception/videos/", "video", False),
+    "Egocentric Navigation": ("egocentric_navigation.json", "vlnqa/", "video", False),
+    "Episodic Reasoning": (
+        "episodic_reasoning.json",
+        "tvqa/frames_fps3_hq/",
+        "frame",
+        True,
+    ),  # has start & end, read frame
+    "Counterfactual Inference": (
+        "counterfactual_inference.json",
+        "clevrer/video_validation/",
+        "video",
+        False,
+    ),
+}
 
 class EvalDataset(torch.utils.data.IterableDataset):
     """Dataset for supervised fine-tuning."""
@@ -54,59 +127,45 @@ class EvalDataset(torch.utils.data.IterableDataset):
 
         self.data_path = data_path
 
-        data_list = {
-            "nextqa": ("val.json", None, "video"),
-        }
-
         list_data_dict = []
-        for k, v in data_list.items():
-            with open(os.path.join(data_path, v[0]), "r") as f:
+        for task_name, task in tasks.items():
+            json_file = os.path.join(data_path, "json", task[0])
+            vis_folder = os.path.join(data_path, "video", task[1])
+            with open(json_file, "r") as f:
                 json_data = json.load(f)
             for data in json_data:
-                question, answer = self.qa_template(data)
+                video_path = os.path.join(vis_folder, data["video"])
+                answer = data["answer"]
+                question = data["question"]
+                answer_idx = -1
+                letters = []
+                options = data["candidates"]
+                options_string = ""
+                for option_idx, c in enumerate(options):
+                    letters.append(f"{chr(ord('A') + option_idx)}")
+                    options_string += f"({chr(ord('A') + option_idx)}) {c}\n"
+                    if c == answer:
+                        answer_idx = option_idx
+                prompt = f"Question: {question}\nOptions:\n{options_string}Answer with the option's letter from the given choices directly and only give the best option."
                 list_data_dict.append(
                     {
-                        "task_type": k,
-                        "video": os.path.join(self.data_path, data["video"]),
-                        "video_name": data["video"],
-                        "question": data["conversations"][0]["value"],
-                        "prompt": question,
-                        "answer": data["conversations"][1]["value"][1:2],
+                        "task_type": task_name,
+                        "bound": (data["start"], data["end"]) if task[3] else task[3],
+                        "question": question,
+                        "prompt": prompt,
+                        "answer": answer_idx,
+                        "answer_word": data["answer"],
+                        "video_name": data["video"].split(".")[0],
+                        "video": video_path,
+                        "data_type": task[2],
+                        "letters": ",".join(letters),
                     }
                 )
 
-        # pyre-fixme[4]: Attribute must be annotated.
         self.data = list_data_dict
 
     def __len__(self) -> int:
         return len(self.data)
-
-    # pyre-fixme[3]: Return type must be annotated.
-    # pyre-fixme[2]: Parameter must be annotated.
-    def qa_template(self, data):
-        # Extract question and options from the conversation value
-        conv_text = data["conversations"][0]["value"]
-        
-        # Split into question and options
-        parts = conv_text.split("Options:\n")
-        question = parts[0].replace("<image>\n", "").strip()
-        options_text = parts[1].strip()
-        
-        # Format question with options
-        formatted_question = f"Question: {question}\n"
-        formatted_question += "Options:\n"
-        formatted_question += options_text
-        
-        # Get answer from GPT response
-        answer = data["conversations"][1]["value"].strip()
-        # Extract just the letter from format like "(A) roll the handle"
-        answer = answer[1:2]  # Gets just the letter
-
-        #print("formatted_question: ", formatted_question, flush=True)
-        #print("answer: ", answer, flush=True)
-        #print("--------------------------------", flush=True)
-
-        return formatted_question, answer
 
     # pyre-fixme[3]: Return type must be annotated.
     def __iter__(self):
@@ -127,13 +186,12 @@ def train(args) -> None:
 
     # torch.distributed.barrier()
     tokenizer, model, image_processor, context_len = load_pretrained_model(
-        model_path,  # pyre-fixme
+        model_path,  
         None,
         model_name,
         device_map=None,
     )
-    model.get_model().config.dino_threshold = 0.82
-    model.get_model().config.drop_threshold = 0.77
+    model.get_model().config.drop_threshold = 0.8
     model.config.use_cache = True
     model.cuda()
     dataset = EvalDataset(
@@ -156,120 +214,172 @@ def train(args) -> None:
         answer = line["answer"]
         qs = line["prompt"]
         task_type = line["task_type"]
-        video_path = os.path.join(
-            args.data_path,
-            line["video"],
-        )
+        video_path = line["video"]
+        bound = line["bound"]
+        data_type = line["data_type"]
+        letters = line["letters"].split(",")
 
-        if os.path.exists(video_path):
-            vr = VideoReader(video_path, ctx=cpu(0))
-            fps = round(vr.get_avg_fps())
-            frame_idx = [
-                    i
-                    for i in range(0, len(vr), round(fps / 0.5))
-                ]
-            if len(frame_idx) > 1000:
-                frame_idx = [
-                    frame_idx[i]
-                    for i in range(0, len(frame_idx), len(frame_idx) // 1000)
-                ]
-            video = vr.get_batch(frame_idx).asnumpy()
-            image_sizes = [video[0].shape[:2]]
-            video = process_images(video, image_processor, model.config)
-            video = [item.unsqueeze(0) for item in video]
-        else:
-            video = np.zeros((1, 1024, 1024, 3)).astype(np.uint8)
-            image_sizes = [(1024, 1024)]
-            video = process_images(video, image_processor, model.config)
+        try:
+            if os.path.exists(video_path):
+                if data_type == "video":
+                    vr = VideoReader(video_path, ctx=cpu(0), num_threads=1)
+                    max_frame = len(vr) - 1
+                    fps = float(vr.get_avg_fps())
+                    if bound:
+                        start, end = bound[0], bound[1]
+                        start_idx = max(0, round(start * fps))
+                        end_idx = min(round(end * fps), max_frame)
+                        frame_indices = np.array(
+                            [i for i in range(start_idx, end_idx, round(fps / 2))]
+                        )
+                    else:
+                        frame_indices = np.array(
+                            [i for i in range(0, len(vr), round(fps / 2))]
+                        )
+                    
+                    if len(frame_indices) == 0:
+                        print(f"Warning: No frames selected for video {video_name} at path {video_path}")
+                        print(f"Parameters: start={start if bound else 'None'}, end={end if bound else 'None'}, fps={fps}")
+                        continue
 
-        if getattr(model.config, "mm_use_im_start_end", False):
-            qs = (
-                DEFAULT_IM_START_TOKEN
-                + DEFAULT_IMAGE_TOKEN
-                + DEFAULT_IM_END_TOKEN
-                + "\n"
-                + qs
+                    video = []
+                    for frame_index in frame_indices:
+                        try:
+                            img = vr[frame_index].asnumpy()
+                            video.append(img)
+                        except Exception as e:
+                            print(f"Error reading frame {frame_index} from video {video_name}: {str(e)}")
+                    
+                    if not video:
+                        print(f"Warning: Failed to read any frames from video {video_name} at path {video_path}")
+                        continue
+                        
+                    video = np.stack(video)
+                else:
+                    max_frame = len(os.listdir(video_path))
+                    images_group = list()
+                    fps = 3
+                    if bound:
+                        start, end = bound[0], bound[1]
+                    else:
+                        start, end = -100000, 100000
+                    start_idx = max(1, round(start * fps))
+                    end_idx = min(round(end * fps), max_frame)
+                    frame_indices = [
+                        i
+                        for i in range(
+                            start_idx,
+                            end_idx,
+                            round(fps / 2),
+                        )
+                    ]
+                    for frame_index in frame_indices:
+                        img = Image.open(
+                            os.path.join(video_path, f"{frame_index:05d}.jpg")
+                        ).convert("RGB")
+                        images_group.append(np.array(img))
+                    video = np.stack(images_group)
+                
+                image_sizes = [video[0].shape[:2]]
+                video = process_images(video, image_processor, model.config)
+                video = [item.unsqueeze(0) for item in video]
+            else:
+                print(f"Warning: Video file not found: {video_path}")
+                video = np.zeros((1, 1024, 1024, 3)).astype(np.uint8)
+                image_sizes = [(1024, 1024)]
+                video = process_images(video, image_processor, model.config)
+
+            if getattr(model.config, "mm_use_im_start_end", False):
+                qs = (
+                    DEFAULT_IM_START_TOKEN
+                    + DEFAULT_IMAGE_TOKEN
+                    + DEFAULT_IM_END_TOKEN
+                    + "\n"
+                    + qs
+                )
+            else:
+                qs = DEFAULT_IMAGE_TOKEN + "\n" + qs
+
+            conv = conv_templates[version].copy()
+            conv.append_message(conv.roles[0], qs)
+            conv.append_message(conv.roles[1], None)
+            prompt = conv.get_prompt()
+
+            input_ids = (
+                tokenizer_image_token(
+                    prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt"
+                )
+                .unsqueeze(0)
+                .cuda()
             )
-        else:
-            qs = DEFAULT_IMAGE_TOKEN + "\n" + qs
 
-        conv = conv_templates[version].copy()
-        conv.append_message(conv.roles[0], qs)
-        conv.append_message(conv.roles[1], None)
-        prompt = conv.get_prompt()
+            if "llama3" in version:
+                input_ids = input_ids[0][1:].unsqueeze(0)  # remove bos
 
-        input_ids = (
-            tokenizer_image_token(
-                prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt"
-            )
-            .unsqueeze(0)
-            .cuda()
-        )
-
-        if "llama3" in version:
-            input_ids = input_ids[0][1:].unsqueeze(0)  # remove bos
-
-        stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
-        keywords = [stop_str]
-        stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
+            stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
+            keywords = [stop_str]
+            stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
             
-        with torch.inference_mode():
-            output_ids = model.generate(
-                input_ids,
-                images=video,
-                image_sizes=image_sizes,
-                do_sample=False,
-                temperature=0.0,
-                max_new_tokens=5,  
-                use_cache=True,
-                stopping_criteria=[stopping_criteria],
+            with torch.inference_mode():
+                output_ids = model.generate(
+                    input_ids,
+                    images=video,
+                    image_sizes=image_sizes,
+                    do_sample=False,
+                    temperature=0.0,
+                    max_new_tokens=5,  
+                    use_cache=True,
+                    stopping_criteria=[stopping_criteria],
+                )
+            if isinstance(output_ids, tuple):
+                output_ids = output_ids[0]
+            pred = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[
+                0
+            ].strip()
+            if pred.endswith(stop_str):
+                pred = pred[: -len(stop_str)]
+                pred = pred.strip()
+            pred = pred.replace("Answer", "")
+
+            pred_answer = re.findall(
+                f"[\(,\ ]*[{letters[0]}-{letters[-1]}][\),\ ]*", pred
             )
-        if isinstance(output_ids, tuple):
-            output_ids = output_ids[0]
-        pred = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[
-            0
-        ].strip()
-        print("pred: ", pred, flush=True)
-        print("--------------------------------", flush=True)
-        if pred.endswith(stop_str):
-            pred = pred[: -len(stop_str)]
-            pred = pred.strip()
-        pred = pred.replace("Answer", "")
 
-        letters = ["A", "B", "C", "D", "E"]
+            pred_answer = pred_answer[0].strip()
+            pred_answer = pred_answer.strip("()")
+            if pred_answer in letters:
+                pred_idx = letters.index(pred_answer)
+                pred = letters[pred_idx]
+            else:
+                print("pred_answer: ", pred_answer, " pred: ", pred, flush=True)
+                pred_idx = 2
+                pred = letters[pred_idx]
 
-        pred_answer = re.findall("[\(\ \[]*([A-E])[\)\.\ \]]*", pred)
+            ans_id = uuid.uuid4()
+            output.append(
+                {
+                    "question": line["question"],
+                    "prompt": qs,
+                    "answer": answer,
+                    "pred": pred_idx,
+                    "task_type": task_type,
+                    "answer_id": str(ans_id),
+                    "model_id": model_name,
+                    "video_name": video_name,
+                    "metadata": {},
+                }
+            )
 
-        pred_answer = pred_answer[0].strip()
-        pred_answer = pred_answer.strip("()")
-        if pred_answer in letters:
-            pred_idx = letters.index(pred_answer)
-            pred = letters[pred_idx]
-        else:
-            print("pred_answer: ", pred_answer, " pred: ", pred, flush=True)
-            pred_idx = 2
-            pred = letters[pred_idx]
-
-        ans_id = uuid.uuid4()
-        output.append(
-            {
-                "question": line["question"],
-                "prompt": qs,
-                "answer": answer,
-                "pred": pred,
-                "task_type": task_type,
-                "answer_id": str(ans_id),
-                "model_id": model_name,
-                "video_name": video_name,
-                "metadata": {},
-            }
-        )
+        except Exception as e:
+            print(f"Error processing video {video_name} at path {video_path}: {str(e)}")
+            continue
 
     dist.barrier()
     dist.all_gather_object(
         final_output,
         output,
     )
+    
     all_output = list(chain(*final_output))
     global_rank = dist.get_rank()
     if global_rank == 0:
@@ -283,34 +393,26 @@ def train(args) -> None:
         ) as f:
             json.dump(all_output, f)
 
-        correct = 0
-        total = 0
-        acc_dict = {}
-        for output in all_output:
-            pred = output["pred"]
-            gt = output["answer"]
-            task_type = output["task_type"]
-            if task_type not in acc_dict:
-                acc_dict[task_type] = [0, 0]
-            acc_dict[task_type][1] += 1
-            total += 1
+        task_types = tasks.keys()
+        task_acc = {x: [] for x in task_types}
+        acc = []
 
-            if pred == gt:
-                acc_dict[task_type][0] += 1
-                correct += 1
+        for i, x in enumerate(all_output):
+            value = 1
+            if x["pred"] != x["answer"]:
+                value = 0
+            acc.append(value)
+            task_acc[x["task_type"]].append(value)
 
-        final_res = dict()
-        total = 0
-        idx = 0
-        for k, v in acc_dict.items():
-            idx += 1
-            final_res[k] = v[0] / v[1] * 100
-            total += final_res[k]
-        final_res["Acc"] = total / idx
-        print(final_res, flush=True)
+        acc = sum(acc) * 100 / len(acc)
+        task_acc = {x: sum(task_acc[x]) * 100 / len(task_acc[x]) for x in task_acc}
+        print(f"Accuracy: ", acc)
+        print("Task ccuracy", task_acc)
+
+        task_acc["avg"] = acc
 
         with open(os.path.join("/tmp/generated_text", "result.json"), "w") as f:
-            json.dump(final_res, f)
+            json.dump(task_acc, f)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
