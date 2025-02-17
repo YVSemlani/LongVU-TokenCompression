@@ -114,6 +114,7 @@ tasks = {
         "video",
         False,
     ),
+    "NextQA": ("val-mvbench.json", None, "video", False),
 }
 
 class EvalDataset(torch.utils.data.IterableDataset):
@@ -129,8 +130,8 @@ class EvalDataset(torch.utils.data.IterableDataset):
 
         list_data_dict = []
         for task_name, task in tasks.items():
-            json_file = os.path.join(data_path, "json", task[0])
-            vis_folder = os.path.join(data_path, "video", task[1])
+            json_file = os.path.join(data_path, task[0])
+            vis_folder = data_path
             with open(json_file, "r") as f:
                 json_data = json.load(f)
             for data in json_data:
