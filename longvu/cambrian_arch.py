@@ -643,19 +643,29 @@ class CambrianMetaForCausalLM(ABC):
                 image_aux_features_list.append(image_aux_features)
             return image_aux_features_list
 
+    # select frame will take its input from the output of the encode images function
+    # all frames that we pass as input will be encoded (idk how yet)
+    # select frame does at least some compression
+    # are all methods in here for compression?
+    # lets find that out.
+    # it seems not
+    # only the similarity mechanism is here and not the attention based approaches (2 and 3 in the paper)
     def select_frame(
-        self,
-        feature_list,
-        split_sizes,
-        input_ids,
-        new_image_aux_list,
-        image_sizes,
-        window_size=16,
-        threshold=0.83,
+        self,                # THESE EXPLANATIONS ARE GPT GENERATED AND SHOULD BE FACT-CHECKED
+        feature_list,        # DINO features extracted from video frames
+        split_sizes,         # List of number of frames per video in the batch
+        input_ids,          # Input token IDs for the text
+        new_image_aux_list, # List of processed image tensors from different encoders
+        image_sizes,        # Original sizes of the input images/frames
+        window_size=16,     # Size of window for processing frames in segments
+        threshold=0.83,     # Similarity threshold for frame selection
     ):
-        dino_features_batch = torch.split(feature_list, split_sizes, dim=0)
-        new_image_aux_batch_0 = torch.split(new_image_aux_list[0], split_sizes, dim=0)
-        new_image_aux_batch_1 = torch.split(new_image_aux_list[1], split_sizes, dim=0)
+        dino_features_batch = torch.split(feature_list, split_sizes, dim=0) # dino presumably generates some extra features which we split into ele. corresponding to a video in the batch
+        
+        # it seems that these new_image are not yet encoded
+        # only the dino features are extracted first which will tell us whether to keep a frame or not
+        new_image_aux_batch_0 = torch.split(new_image_aux_list[0], split_sizes, dim=0) # split (presumably SIGLIP output) into ele. corresponding to a video in the batch
+        new_image_aux_batch_1 = torch.split(new_image_aux_list[1], split_sizes, dim=0) # split (presumably DINO output) into ele. corresponding to a video in the batch
         new_split_sizes = []
         selected_frames_all_0 = []
         selected_frames_all_1 = []
@@ -694,6 +704,9 @@ class CambrianMetaForCausalLM(ABC):
             # token_per_frame = (
             #     token_per_side**2 if token_per_frame < 1 else token_per_frame
             # )
+
+
+            # max frames according to the context length we set
             max_num_frames = max(
                 1,
                 (
@@ -703,6 +716,8 @@ class CambrianMetaForCausalLM(ABC):
                 )
                 // token_per_frame,
             )
+
+            # if the total amount of frames is under our max context length we just keep everything
             if len(frame_features) < max_num_frames:
                 selected_frames_all_0.append(new_image_aux_batch_0[i_batch])
                 selected_frames_all_1.append(new_image_aux_batch_1[i_batch])
@@ -710,8 +725,12 @@ class CambrianMetaForCausalLM(ABC):
                 new_split_sizes.append(len(frame_features))
                 selected_frame_indices_all.append(torch.arange(len(frame_features)))
                 continue
-
+            
+            # given a specific window size (hyperparam) we calculate how many of these windows make the total set of frames
+            # remainders are handled seperately
             num_segments = len(frame_features) // window_size
+
+            # if not a full segment process all seperately
             if num_segments == 0:
                 query_feature = frame_features.flatten(1, 2)
                 query_feature = query_feature / torch.norm(
@@ -729,6 +748,8 @@ class CambrianMetaForCausalLM(ABC):
             segments_frames_0 = []
             segments_frames_1 = []
             segments_features = []
+
+            # otherwise split the full video into segments and then do similarity operation
             for start_idx in range(0, len(frame_features), window_size):
                 end_idx = min(start_idx + window_size, len(frame_features))
                 segments_frames_0.append(
@@ -747,7 +768,10 @@ class CambrianMetaForCausalLM(ABC):
                 query_feature = query_feature / torch.norm(
                     (query_feature), dim=1, keepdim=True
                 )
-                similarities = torch.mean(query_feature @ query_feature.T, dim=1)
+                # each entry in similarities is just the dot product between frames i & j for entry (i, j)
+                # mean averages the similarities so for frame i the entries in that row say how similar frame i is to all other frames
+                # its just cosine similarity (dot product is essentially just seeing what the angle is between the two frames in vector space)
+                similarities = torch.mean(query_feature @ query_feature.T, dim=1) 
                 similarities[len(segment) // 2] = 0
                 indices = torch.where(similarities < threshold)[0]
                 selected_frames_0.append(segments_frames_0[i][indices])
@@ -897,6 +921,9 @@ class CambrianMetaForCausalLM(ABC):
                 vision_tower_aux_feature_list.append(image_aux_features)
             input_mix_res = True
             input_high_res = True
+
+            # THIS IS WHERE VISION SAMPLING OCCURS USING ATTENTION 
+            # VISION SAMPLER FLAG !!!
             # perform vision sampling for each query group
             for query_group_i, query_num in enumerate(query_num_list):
                 query_features_i = (
@@ -926,6 +953,8 @@ class CambrianMetaForCausalLM(ABC):
                         vision_tower_aux_feature_list, query_side_len, image_sizes
                     )
 
+                # CALLS VISION TOKEN SAMPLER CORRESPONDING TO THE QUERY GROUP
+                # VISION SAMPLER FLAG 2 !!!
                 query_features_i = getattr(
                     self.get_model(), "vision_sampler_{}".format(query_group_i)
                 )(

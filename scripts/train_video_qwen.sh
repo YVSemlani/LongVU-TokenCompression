@@ -1,9 +1,9 @@
 
 BASE_DIR_CHECKPOINT="./checkpoints/"
 PREV_STAGE_CHECKPOINT="${BASE_DIR_CHECKPOINT}/longvu_cambrian_qwen" # checkpoint you're finetuning from
-PATH_TO_JSON="./data/nextqa/train.json"
+PATH_TO_JSON="./data/nextqa/train-mlvu.json"
 PATH_TO_FOLDER="./data/nextqa/"
-OUTPUT_MODEL_FILENAME="${PREV_STAGE_CHECKPOINT}_nextqa_ft"
+OUTPUT_MODEL_FILENAME="${PREV_STAGE_CHECKPOINT}_nextqa_hp_ft"
 VERSION="qwen"
 
 DEEPSPEED_CONFIG_FILE="./deepspeed/zero2.json"
@@ -16,7 +16,7 @@ longvu/train.py \
 --data_path $PATH_TO_JSON \
 --image_folder $PATH_TO_FOLDER \
 --spatiotemporal_compressor None \
---model_max_length 8192 \
+--model_max_length 4096 \
 --fp16 False \
 --bf16 True \
 --log_on_each_node False \
@@ -54,7 +54,7 @@ longvu/train.py \
 --query_num_list "[144]" \
 --resume True \
 --lowres_token 8 \
---video_fps 1 \
+--video_fps 0.5 \
 --highres True \
 --drop_threshold 0.8 \
 --deepspeed $DEEPSPEED_CONFIG_FILE \

@@ -1,0 +1,335 @@
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: huggingface_hub==0.25.1 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 1)) (0.25.1)
+Requirement already satisfied: torch==2.1.2 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 2)) (2.1.2)
+Requirement already satisfied: numpy==1.26.4 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 3)) (1.26.4)
+Requirement already satisfied: torchvision in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 4)) (0.16.2)
+Requirement already satisfied: transformers==4.42.4 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 5)) (4.42.4)
+Requirement already satisfied: tokenizers==0.19.1 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 6)) (0.19.1)
+Requirement already satisfied: sentencepiece==0.1.99 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 7)) (0.1.99)
+Requirement already satisfied: shortuuid in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 8)) (1.0.13)
+Requirement already satisfied: accelerate==0.34.2 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 9)) (0.34.2)
+Requirement already satisfied: peft==0.4.0 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 10)) (0.4.0)
+Requirement already satisfied: bitsandbytes==0.41.0 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 11)) (0.41.0)
+Requirement already satisfied: pydantic<2,>=1 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 12)) (1.10.21)
+Requirement already satisfied: markdown2 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 13)) (2.5.3)
+Requirement already satisfied: scikit-learn==1.2.2 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 14)) (1.2.2)
+Requirement already satisfied: gradio==3.35.2 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 15)) (3.35.2)
+Requirement already satisfied: gradio_client==0.2.9 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 16)) (0.2.9)
+Requirement already satisfied: requests in /usr/lib/python3/dist-packages (from -r requirements.txt (line 17)) (2.25.1)
+Requirement already satisfied: httpx==0.24.0 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 18)) (0.24.0)
+Requirement already satisfied: uvicorn in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 19)) (0.34.0)
+Requirement already satisfied: fastapi in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 20)) (0.115.7)
+Requirement already satisfied: einops==0.6.1 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 21)) (0.6.1)
+Requirement already satisfied: einops-exts==0.0.4 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 22)) (0.0.4)
+Requirement already satisfied: timm==0.9.16 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 23)) (0.9.16)
+Requirement already satisfied: decord in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 24)) (0.6.0)
+Requirement already satisfied: ninja in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 25)) (1.11.1.3)
+Requirement already satisfied: deepspeed==0.12.2 in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 26)) (0.12.2)
+Requirement already satisfied: protobuf in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 27)) (5.29.3)
+Requirement already satisfied: iopath in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 28)) (0.1.10)
+Requirement already satisfied: tensorboard in /home/yvs/.local/lib/python3.10/site-packages (from -r requirements.txt (line 29)) (2.19.0)
+Requirement already satisfied: filelock in /home/yvs/.local/lib/python3.10/site-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (3.17.0)
+Requirement already satisfied: packaging>=20.9 in /home/yvs/.local/lib/python3.10/site-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (24.2)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in /home/yvs/.local/lib/python3.10/site-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (4.12.2)
+Requirement already satisfied: tqdm>=4.42.1 in /home/yvs/.local/lib/python3.10/site-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (4.67.1)
+Requirement already satisfied: fsspec>=2023.5.0 in /home/yvs/.local/lib/python3.10/site-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (2024.12.0)
+Requirement already satisfied: pyyaml>=5.1 in /usr/lib/python3/dist-packages (from huggingface_hub==0.25.1->-r requirements.txt (line 1)) (5.4.1)
+Requirement already satisfied: nvidia-cublas-cu12==12.1.3.1 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.3.1)
+Requirement already satisfied: nvidia-cudnn-cu12==8.9.2.26 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (8.9.2.26)
+Requirement already satisfied: nvidia-cufft-cu12==11.0.2.54 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (11.0.2.54)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.1.105 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.105)
+Requirement already satisfied: nvidia-cusolver-cu12==11.4.5.107 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (11.4.5.107)
+Requirement already satisfied: jinja2 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (3.1.5)
+Requirement already satisfied: sympy in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (1.13.3)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.1.105 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.105)
+Requirement already satisfied: nvidia-curand-cu12==10.3.2.106 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (10.3.2.106)
+Requirement already satisfied: triton==2.1.0 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (2.1.0)
+Requirement already satisfied: nvidia-cusparse-cu12==12.1.0.106 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.0.106)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.1.105 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.105)
+Requirement already satisfied: nvidia-nvtx-cu12==12.1.105 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (12.1.105)
+Requirement already satisfied: networkx in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (3.4.2)
+Requirement already satisfied: nvidia-nccl-cu12==2.18.1 in /home/yvs/.local/lib/python3.10/site-packages (from torch==2.1.2->-r requirements.txt (line 2)) (2.18.1)
+Requirement already satisfied: safetensors>=0.4.1 in /home/yvs/.local/lib/python3.10/site-packages (from transformers==4.42.4->-r requirements.txt (line 5)) (0.5.2)
+Requirement already satisfied: regex!=2019.12.17 in /home/yvs/.local/lib/python3.10/site-packages (from transformers==4.42.4->-r requirements.txt (line 5)) (2024.11.6)
+Requirement already satisfied: psutil in /home/yvs/.local/lib/python3.10/site-packages (from accelerate==0.34.2->-r requirements.txt (line 9)) (6.1.1)
+Requirement already satisfied: joblib>=1.1.1 in /home/yvs/.local/lib/python3.10/site-packages (from scikit-learn==1.2.2->-r requirements.txt (line 14)) (1.4.2)
+Requirement already satisfied: threadpoolctl>=2.0.0 in /home/yvs/.local/lib/python3.10/site-packages (from scikit-learn==1.2.2->-r requirements.txt (line 14)) (3.5.0)
+Requirement already satisfied: scipy>=1.3.2 in /home/yvs/.local/lib/python3.10/site-packages (from scikit-learn==1.2.2->-r requirements.txt (line 14)) (1.15.1)
+Requirement already satisfied: altair>=4.2.0 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (5.5.0)
+Requirement already satisfied: ffmpy in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.5.0)
+Requirement already satisfied: pydub in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.25.1)
+Requirement already satisfied: mdit-py-plugins<=0.3.3 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.3.3)
+Requirement already satisfied: semantic-version in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (2.10.0)
+Requirement already satisfied: markdown-it-py[linkify]>=2.0.0 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (2.2.0)
+Requirement already satisfied: websockets>=10.0 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (14.2)
+Requirement already satisfied: matplotlib in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.10.0)
+Requirement already satisfied: pygments>=2.12.0 in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (2.19.1)
+Requirement already satisfied: pillow in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (11.1.0)
+Requirement already satisfied: pandas in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (2.2.3)
+Requirement already satisfied: python-multipart in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (0.0.20)
+Requirement already satisfied: aiohttp in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.11.11)
+Requirement already satisfied: aiofiles in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (24.1.0)
+Requirement already satisfied: markupsafe in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.0.2)
+Requirement already satisfied: orjson in /home/yvs/.local/lib/python3.10/site-packages (from gradio==3.35.2->-r requirements.txt (line 15)) (3.10.15)
+Requirement already satisfied: certifi in /usr/lib/python3/dist-packages (from httpx==0.24.0->-r requirements.txt (line 18)) (2020.6.20)
+Requirement already satisfied: sniffio in /home/yvs/.local/lib/python3.10/site-packages (from httpx==0.24.0->-r requirements.txt (line 18)) (1.3.1)
+Requirement already satisfied: httpcore<0.18.0,>=0.15.0 in /home/yvs/.local/lib/python3.10/site-packages (from httpx==0.24.0->-r requirements.txt (line 18)) (0.17.3)
+Requirement already satisfied: idna in /usr/lib/python3/dist-packages (from httpx==0.24.0->-r requirements.txt (line 18)) (3.3)
+Requirement already satisfied: pynvml in /home/yvs/.local/lib/python3.10/site-packages (from deepspeed==0.12.2->-r requirements.txt (line 26)) (12.0.0)
+Requirement already satisfied: hjson in /home/yvs/.local/lib/python3.10/site-packages (from deepspeed==0.12.2->-r requirements.txt (line 26)) (3.1.0)
+Requirement already satisfied: py-cpuinfo in /home/yvs/.local/lib/python3.10/site-packages (from deepspeed==0.12.2->-r requirements.txt (line 26)) (9.0.0)
+Requirement already satisfied: nvidia-nvjitlink-cu12 in /home/yvs/.local/lib/python3.10/site-packages (from nvidia-cusolver-cu12==11.4.5.107->torch==2.1.2->-r requirements.txt (line 2)) (12.8.61)
+Requirement already satisfied: click>=7.0 in /usr/lib/python3/dist-packages (from uvicorn->-r requirements.txt (line 19)) (8.0.3)
+Requirement already satisfied: h11>=0.8 in /home/yvs/.local/lib/python3.10/site-packages (from uvicorn->-r requirements.txt (line 19)) (0.14.0)
+Requirement already satisfied: starlette<0.46.0,>=0.40.0 in /home/yvs/.local/lib/python3.10/site-packages (from fastapi->-r requirements.txt (line 20)) (0.45.3)
+Requirement already satisfied: portalocker in /home/yvs/.local/lib/python3.10/site-packages (from iopath->-r requirements.txt (line 28)) (3.1.1)
+Requirement already satisfied: setuptools>=41.0.0 in /usr/lib/python3/dist-packages (from tensorboard->-r requirements.txt (line 29)) (59.6.0)
+Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (0.7.2)
+Requirement already satisfied: werkzeug>=1.0.1 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (3.1.3)
+Requirement already satisfied: six>1.9 in /usr/lib/python3/dist-packages (from tensorboard->-r requirements.txt (line 29)) (1.16.0)
+Requirement already satisfied: markdown>=2.6.8 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (3.7)
+Requirement already satisfied: grpcio>=1.48.2 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (1.70.0)
+Requirement already satisfied: absl-py>=0.4 in /home/yvs/.local/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 29)) (2.1.0)
+Requirement already satisfied: jsonschema>=3.0 in /home/yvs/.local/lib/python3.10/site-packages (from altair>=4.2.0->gradio==3.35.2->-r requirements.txt (line 15)) (4.23.0)
+Requirement already satisfied: narwhals>=1.14.2 in /home/yvs/.local/lib/python3.10/site-packages (from altair>=4.2.0->gradio==3.35.2->-r requirements.txt (line 15)) (1.24.0)
+Requirement already satisfied: anyio<5.0,>=3.0 in /home/yvs/.local/lib/python3.10/site-packages (from httpcore<0.18.0,>=0.15.0->httpx==0.24.0->-r requirements.txt (line 18)) (4.8.0)
+Requirement already satisfied: mdurl~=0.1 in /home/yvs/.local/lib/python3.10/site-packages (from markdown-it-py[linkify]>=2.0.0->gradio==3.35.2->-r requirements.txt (line 15)) (0.1.2)
+Requirement already satisfied: linkify-it-py<3,>=1 in /home/yvs/.local/lib/python3.10/site-packages (from markdown-it-py[linkify]>=2.0.0->gradio==3.35.2->-r requirements.txt (line 15)) (2.0.3)
+Requirement already satisfied: frozenlist>=1.1.1 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (1.5.0)
+Requirement already satisfied: async-timeout<6.0,>=4.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (5.0.1)
+Requirement already satisfied: multidict<7.0,>=4.5 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (6.1.0)
+Requirement already satisfied: propcache>=0.2.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (0.2.1)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (1.18.3)
+Requirement already satisfied: aiohappyeyeballs>=2.3.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (2.4.4)
+Requirement already satisfied: aiosignal>=1.1.2 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (1.3.2)
+Requirement already satisfied: attrs>=17.3.0 in /home/yvs/.local/lib/python3.10/site-packages (from aiohttp->gradio==3.35.2->-r requirements.txt (line 15)) (25.1.0)
+Requirement already satisfied: cycler>=0.10 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (0.12.1)
+Requirement already satisfied: python-dateutil>=2.7 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (2.9.0.post0)
+Requirement already satisfied: pyparsing>=2.3.1 in /usr/lib/python3/dist-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (2.4.7)
+Requirement already satisfied: contourpy>=1.0.1 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (1.3.1)
+Requirement already satisfied: fonttools>=4.22.0 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (4.55.7)
+Requirement already satisfied: kiwisolver>=1.3.1 in /home/yvs/.local/lib/python3.10/site-packages (from matplotlib->gradio==3.35.2->-r requirements.txt (line 15)) (1.4.8)
+Requirement already satisfied: pytz>=2020.1 in /usr/lib/python3/dist-packages (from pandas->gradio==3.35.2->-r requirements.txt (line 15)) (2022.1)
+Requirement already satisfied: tzdata>=2022.7 in /home/yvs/.local/lib/python3.10/site-packages (from pandas->gradio==3.35.2->-r requirements.txt (line 15)) (2025.1)
+Requirement already satisfied: nvidia-ml-py<13.0.0a0,>=12.0.0 in /home/yvs/.local/lib/python3.10/site-packages (from pynvml->deepspeed==0.12.2->-r requirements.txt (line 26)) (12.570.86)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /home/yvs/.local/lib/python3.10/site-packages (from sympy->torch==2.1.2->-r requirements.txt (line 2)) (1.3.0)
+Requirement already satisfied: exceptiongroup>=1.0.2 in /home/yvs/.local/lib/python3.10/site-packages (from anyio<5.0,>=3.0->httpcore<0.18.0,>=0.15.0->httpx==0.24.0->-r requirements.txt (line 18)) (1.2.2)
+Requirement already satisfied: rpds-py>=0.7.1 in /home/yvs/.local/lib/python3.10/site-packages (from jsonschema>=3.0->altair>=4.2.0->gradio==3.35.2->-r requirements.txt (line 15)) (0.22.3)
+Requirement already satisfied: referencing>=0.28.4 in /home/yvs/.local/lib/python3.10/site-packages (from jsonschema>=3.0->altair>=4.2.0->gradio==3.35.2->-r requirements.txt (line 15)) (0.36.2)
+Requirement already satisfied: jsonschema-specifications>=2023.03.6 in /home/yvs/.local/lib/python3.10/site-packages (from jsonschema>=3.0->altair>=4.2.0->gradio==3.35.2->-r requirements.txt (line 15)) (2024.10.1)
+Requirement already satisfied: uc-micro-py in /home/yvs/.local/lib/python3.10/site-packages (from linkify-it-py<3,>=1->markdown-it-py[linkify]>=2.0.0->gradio==3.35.2->-r requirements.txt (line 15)) (1.0.3)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: jinja2>=3.1.0 in /home/yvs/.local/lib/python3.10/site-packages (3.1.5)
+Requirement already satisfied: MarkupSafe>=2.0 in /home/yvs/.local/lib/python3.10/site-packages (from jinja2>=3.1.0) (3.0.2)
+NUM_GPUS: 8
+[2025-02-17 20:05:56,415] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-17 20:05:56,418] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-17 20:05:56,420] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-17 20:05:56,422] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-17 20:05:56,423] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-17 20:05:56,425] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-17 20:05:56,427] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-17 20:05:56,427] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-02-17 20:05:56,688] [INFO] [comm.py:637:init_distributed] cdb=None
+[2025-02-17 20:05:56,706] [INFO] [comm.py:637:init_distributed] cdb=None
+[2025-02-17 20:05:56,707] [INFO] [comm.py:637:init_distributed] cdb=None
+[2025-02-17 20:05:56,709] [INFO] [comm.py:637:init_distributed] cdb=None
+[2025-02-17 20:05:56,713] [INFO] [comm.py:637:init_distributed] cdb=None
+[2025-02-17 20:05:56,717] [INFO] [comm.py:637:init_distributed] cdb=None
+[2025-02-17 20:05:56,807] [INFO] [comm.py:637:init_distributed] cdb=None
+[2025-02-17 20:05:56,821] [INFO] [comm.py:637:init_distributed] cdb=None
+Spatiotemporal compressor: NoneSpatiotemporal compressor: NoneSpatiotemporal compressor: NoneSpatiotemporal compressor: NoneSpatiotemporal compressor: None
+
+Spatiotemporal compressor: None
+
+
+Spatiotemporal compressor: None
+Spatiotemporal compressor: None
+
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+Using conversation format: qwen
+{'loss': 0.8164, 'grad_norm': 33.39777564971283, 'learning_rate': 3.8759689922480623e-07, 'epoch': 0.0}
+{'loss': 0.6644, 'grad_norm': 24.71861663051752, 'learning_rate': 7.751937984496125e-07, 'epoch': 0.0}
+{'loss': 0.2415, 'grad_norm': 11.154336691332611, 'learning_rate': 1.1627906976744188e-06, 'epoch': 0.01}
+{'loss': 0.0129, 'grad_norm': 0.2291564760385611, 'learning_rate': 1.550387596899225e-06, 'epoch': 0.01}
+{'loss': 0.0054, 'grad_norm': 0.4918914238090661, 'learning_rate': 1.9379844961240315e-06, 'epoch': 0.01}
+{'loss': 0.0044, 'grad_norm': 0.792358679537032, 'learning_rate': 2.3255813953488376e-06, 'epoch': 0.01}
+{'loss': 0.0054, 'grad_norm': 1.117263816321577, 'learning_rate': 2.7131782945736433e-06, 'epoch': 0.02}
+{'loss': 0.0039, 'grad_norm': 3.6660120217910723, 'learning_rate': 3.10077519379845e-06, 'epoch': 0.02}
+{'loss': 0.0021, 'grad_norm': 0.40672225772289883, 'learning_rate': 3.4883720930232564e-06, 'epoch': 0.02}
+{'loss': 0.0054, 'grad_norm': 0.04257090870892925, 'learning_rate': 3.875968992248063e-06, 'epoch': 0.02}
+{'loss': 0.0021, 'grad_norm': 0.18522398257492667, 'learning_rate': 4.263565891472868e-06, 'epoch': 0.03}
+{'loss': 0.0012, 'grad_norm': 0.6746959320133701, 'learning_rate': 4.651162790697675e-06, 'epoch': 0.03}
+{'loss': 0.0016, 'grad_norm': 1.4786649085952641, 'learning_rate': 4.99999927950866e-06, 'epoch': 0.03}
+{'loss': 0.0024, 'grad_norm': 0.26280216238248266, 'learning_rate': 4.99991282105041e-06, 'epoch': 0.03}
+{'loss': 0.0009, 'grad_norm': 0.7841512423003767, 'learning_rate': 4.999682270034379e-06, 'epoch': 0.04}
+{'loss': 0.0004, 'grad_norm': 0.03970092003247316, 'learning_rate': 4.999307639749307e-06, 'epoch': 0.04}
+{'loss': 0.0007, 'grad_norm': 0.03211590020294411, 'learning_rate': 4.998788951788521e-06, 'epoch': 0.04}
+{'loss': 0.0031, 'grad_norm': 4.000396999503608, 'learning_rate': 4.998126236048694e-06, 'epoch': 0.04}
+{'loss': 0.001, 'grad_norm': 0.019477377456403742, 'learning_rate': 4.997319530728119e-06, 'epoch': 0.04}
+{'loss': 0.0066, 'grad_norm': 0.05934507880563285, 'learning_rate': 4.9963688823245116e-06, 'epoch': 0.05}
+{'loss': 0.0047, 'grad_norm': 6.38406719459991, 'learning_rate': 4.995274345632326e-06, 'epoch': 0.05}
+{'loss': 0.001, 'grad_norm': 0.07567305260744674, 'learning_rate': 4.994035983739599e-06, 'epoch': 0.05}
+{'loss': 0.0012, 'grad_norm': 0.009833195785619975, 'learning_rate': 4.9926538680243145e-06, 'epoch': 0.05}
+{'loss': 0.0063, 'grad_norm': 0.01261703137787132, 'learning_rate': 4.991128078150283e-06, 'epoch': 0.06}
+{'loss': 0.0012, 'grad_norm': 0.0512593009868548, 'learning_rate': 4.98945870206256e-06, 'epoch': 0.06}
+{'loss': 0.0005, 'grad_norm': 0.07657567351106899, 'learning_rate': 4.987645835982367e-06, 'epoch': 0.06}
+{'loss': 0.003, 'grad_norm': 0.05082680801840649, 'learning_rate': 4.985689584401553e-06, 'epoch': 0.06}
+{'loss': 0.0034, 'grad_norm': 0.0936369890240821, 'learning_rate': 4.983590060076567e-06, 'epoch': 0.07}
+{'loss': 0.0076, 'grad_norm': 0.09456076835183594, 'learning_rate': 4.981347384021962e-06, 'epoch': 0.07}
+{'loss': 0.0055, 'grad_norm': 1.4022361058157011, 'learning_rate': 4.978961685503417e-06, 'epoch': 0.07}
+{'loss': 0.0032, 'grad_norm': 2.5889581463223426, 'learning_rate': 4.976433102030287e-06, 'epoch': 0.07}
+{'loss': 0.0057, 'grad_norm': 0.19558935911712794, 'learning_rate': 4.973761779347679e-06, 'epoch': 0.07}
+{'loss': 0.0064, 'grad_norm': 0.5620784455546708, 'learning_rate': 4.9709478714280505e-06, 'epoch': 0.08}
+{'loss': 0.0044, 'grad_norm': 0.04681479699978759, 'learning_rate': 4.967991540462331e-06, 'epoch': 0.08}
+{'loss': 0.0048, 'grad_norm': 1.37425621268255, 'learning_rate': 4.96489295685058e-06, 'epoch': 0.08}
+{'loss': 0.0083, 'grad_norm': 0.1307552301572812, 'learning_rate': 4.9616522991921614e-06, 'epoch': 0.08}
+{'loss': 0.0039, 'grad_norm': 0.0626222938730895, 'learning_rate': 4.958269754275447e-06, 'epoch': 0.09}
+{'loss': 0.0029, 'grad_norm': 0.4730847658916806, 'learning_rate': 4.954745517067059e-06, 'epoch': 0.09}
+{'loss': 0.0043, 'grad_norm': 0.4776282572442813, 'learning_rate': 4.951079790700618e-06, 'epoch': 0.09}
+{'loss': 0.0093, 'grad_norm': 6.76794365312709, 'learning_rate': 4.94727278646505e-06, 'epoch': 0.09}
+{'loss': 0.0013, 'grad_norm': 0.8953853793751321, 'learning_rate': 4.943324723792397e-06, 'epoch': 0.1}
+{'loss': 0.017, 'grad_norm': 5.729528530471125, 'learning_rate': 4.939235830245175e-06, 'epoch': 0.1}
+{'loss': 0.0063, 'grad_norm': 1.0407284033210282, 'learning_rate': 4.935006341503254e-06, 'epoch': 0.1}
+{'loss': 0.0138, 'grad_norm': 2.712481251254706, 'learning_rate': 4.930636501350274e-06, 'epoch': 0.1}
+{'loss': 0.0088, 'grad_norm': 1.6726642675404733, 'learning_rate': 4.926126561659599e-06, 'epoch': 0.11}
+{'loss': 0.0113, 'grad_norm': 3.193977396405628, 'learning_rate': 4.921476782379789e-06, 'epoch': 0.11}
+{'loss': 0.0023, 'grad_norm': 0.19130827163154027, 'learning_rate': 4.916687431519628e-06, 'epoch': 0.11}
+{'loss': 0.0119, 'grad_norm': 0.05027040890876851, 'learning_rate': 4.911758785132667e-06, 'epoch': 0.11}
+{'loss': 0.0023, 'grad_norm': 0.21288484500974691, 'learning_rate': 4.90669112730132e-06, 'epoch': 0.11}
+{'loss': 0.0096, 'grad_norm': 0.6390500661481646, 'learning_rate': 4.901484750120482e-06, 'epoch': 0.12}
+{'loss': 0.0051, 'grad_norm': 0.21778154168483974, 'learning_rate': 4.896139953680701e-06, 'epoch': 0.12}
+{'loss': 0.0145, 'grad_norm': 0.09823141573868464, 'learning_rate': 4.890657046050875e-06, 'epoch': 0.12}
+{'loss': 0.0073, 'grad_norm': 4.498800547195553, 'learning_rate': 4.8850363432605e-06, 'epoch': 0.12}
+{'loss': 0.004, 'grad_norm': 1.308762011834996, 'learning_rate': 4.879278169281447e-06, 'epoch': 0.13}
+{'loss': 0.0161, 'grad_norm': 3.1396649079906767, 'learning_rate': 4.8733828560093e-06, 'epoch': 0.13}
+{'loss': 0.0107, 'grad_norm': 0.2851343801540348, 'learning_rate': 4.867350743244212e-06, 'epoch': 0.13}
+{'loss': 0.0055, 'grad_norm': 0.23757522149294688, 'learning_rate': 4.861182178671333e-06, 'epoch': 0.13}
+{'loss': 0.0072, 'grad_norm': 1.2008247416145068, 'learning_rate': 4.85487751784076e-06, 'epoch': 0.14}
+{'loss': 0.0065, 'grad_norm': 0.15256795214085783, 'learning_rate': 4.848437124147047e-06, 'epoch': 0.14}
+{'loss': 0.0064, 'grad_norm': 0.5239102736750665, 'learning_rate': 4.841861368808258e-06, 'epoch': 0.14}
+{'loss': 0.0066, 'grad_norm': 5.927675491838683, 'learning_rate': 4.835150630844573e-06, 'epoch': 0.14}
+{'loss': 0.0041, 'grad_norm': 0.5022780166894321, 'learning_rate': 4.82830529705644e-06, 'epoch': 0.15}
+{'loss': 0.0066, 'grad_norm': 0.5582656899450997, 'learning_rate': 4.821325762002279e-06, 'epoch': 0.15}
+{'loss': 0.0089, 'grad_norm': 0.6038154471000137, 'learning_rate': 4.814212427975743e-06, 'epoch': 0.15}
+{'loss': 0.0044, 'grad_norm': 0.9600736049348069, 'learning_rate': 4.806965704982526e-06, 'epoch': 0.15}
+{'loss': 0.0094, 'grad_norm': 1.1426347398078966, 'learning_rate': 4.799586010716734e-06, 'epoch': 0.15}
+{'loss': 0.0062, 'grad_norm': 0.6861316656614773, 'learning_rate': 4.792073770536811e-06, 'epoch': 0.16}
+{'loss': 0.0079, 'grad_norm': 0.4286962778501707, 'learning_rate': 4.784429417441016e-06, 'epoch': 0.16}
+{'loss': 0.0104, 'grad_norm': 0.31341281154820044, 'learning_rate': 4.776653392042468e-06, 'epoch': 0.16}
+{'loss': 0.0053, 'grad_norm': 2.4968007389383544, 'learning_rate': 4.768746142543755e-06, 'epoch': 0.16}
+{'loss': 0.0115, 'grad_norm': 0.030046641961364074, 'learning_rate': 4.760708124711091e-06, 'epoch': 0.17}
+{'loss': 0.0143, 'grad_norm': 3.611589845442949, 'learning_rate': 4.752539801848052e-06, 'epoch': 0.17}
+{'loss': 0.0062, 'grad_norm': 0.6160119506641164, 'learning_rate': 4.74424164476887e-06, 'epoch': 0.17}
+{'loss': 0.011, 'grad_norm': 6.5110960053619, 'learning_rate': 4.735814131771294e-06, 'epoch': 0.17}
+{'loss': 0.0068, 'grad_norm': 0.024089001485953065, 'learning_rate': 4.727257748609027e-06, 'epoch': 0.18}
+{'loss': 0.0053, 'grad_norm': 5.497353133615984, 'learning_rate': 4.718572988463717e-06, 'epoch': 0.18}
+{'loss': 0.0074, 'grad_norm': 3.1046332310474902, 'learning_rate': 4.7097603519165465e-06, 'epoch': 0.18}
+{'loss': 0.0159, 'grad_norm': 4.594581578710723, 'learning_rate': 4.700820346919362e-06, 'epoch': 0.18}
+{'loss': 0.0087, 'grad_norm': 1.5683614698086665, 'learning_rate': 4.691753488765406e-06, 'epoch': 0.19}
+{'loss': 0.0058, 'grad_norm': 1.3972602168353252, 'learning_rate': 4.682560300059618e-06, 'epoch': 0.19}
+{'loss': 0.0079, 'grad_norm': 0.04035369494670436, 'learning_rate': 4.673241310688504e-06, 'epoch': 0.19}
+{'loss': 0.0023, 'grad_norm': 0.10062343058421384, 'learning_rate': 4.6637970577896015e-06, 'epoch': 0.19}
+{'loss': 0.0171, 'grad_norm': 2.0339723648552703, 'learning_rate': 4.654228085720517e-06, 'epoch': 0.19}
+{'loss': 0.0072, 'grad_norm': 1.5587792463555752, 'learning_rate': 4.644534946027546e-06, 'epoch': 0.2}
+{'loss': 0.0076, 'grad_norm': 1.1171621042250317, 'learning_rate': 4.634718197413888e-06, 'epoch': 0.2}
+{'loss': 0.0076, 'grad_norm': 0.1709915785530194, 'learning_rate': 4.624778405707442e-06, 'epoch': 0.2}
+{'loss': 0.0071, 'grad_norm': 2.5409779726364454, 'learning_rate': 4.614716143828191e-06, 'epoch': 0.2}
+{'loss': 0.0072, 'grad_norm': 0.06618361764600954, 'learning_rate': 4.60453199175518e-06, 'epoch': 0.21}
+{'loss': 0.0067, 'grad_norm': 0.3369152787456985, 'learning_rate': 4.594226536493087e-06, 'epoch': 0.21}
+{'loss': 0.0104, 'grad_norm': 1.3788484099930585, 'learning_rate': 4.5838003720383885e-06, 'epoch': 0.21}
+{'loss': 0.0088, 'grad_norm': 0.04196318168585564, 'learning_rate': 4.573254099345124e-06, 'epoch': 0.21}
+{'loss': 0.0105, 'grad_norm': 2.363823953641108, 'learning_rate': 4.562588326290251e-06, 'epoch': 0.22}
+{'loss': 0.0105, 'grad_norm': 0.0522479326815163, 'learning_rate': 4.551803667638618e-06, 'epoch': 0.22}
+{'loss': 0.019, 'grad_norm': 1.610538989368594, 'learning_rate': 4.5409007450075204e-06, 'epoch': 0.22}
+{'loss': 0.0079, 'grad_norm': 0.2919988953438779, 'learning_rate': 4.529880186830877e-06, 'epoch': 0.22}
+{'loss': 0.0087, 'grad_norm': 0.3444752775601018, 'learning_rate': 4.5187426283230055e-06, 'epoch': 0.22}
+{'loss': 0.0094, 'grad_norm': 1.4347012394886751, 'learning_rate': 4.507488711442007e-06, 'epoch': 0.23}
+{'loss': 0.0125, 'grad_norm': 4.738843692236578, 'learning_rate': 4.496119084852772e-06, 'epoch': 0.23}
+{'loss': 0.0124, 'grad_norm': 2.5360528778082907, 'learning_rate': 4.484634403889581e-06, 'epoch': 0.23}
+{'loss': 0.0062, 'grad_norm': 0.14126510142453355, 'learning_rate': 4.473035330518341e-06, 'epoch': 0.23}
+{'loss': 0.0088, 'grad_norm': 0.1778398137906959, 'learning_rate': 4.461322533298425e-06, 'epoch': 0.24}
+{'loss': 0.0085, 'grad_norm': 2.2364478463397472, 'learning_rate': 4.449496687344142e-06, 'epoch': 0.24}
+{'loss': 0.008, 'grad_norm': 0.24010801638743212, 'learning_rate': 4.437558474285814e-06, 'epoch': 0.24}
+{'loss': 0.0087, 'grad_norm': 1.3131021593087802, 'learning_rate': 4.4255085822305e-06, 'epoch': 0.24}
+{'loss': 0.016, 'grad_norm': 2.6317898225636727, 'learning_rate': 4.413347705722327e-06, 'epoch': 0.25}
+{'loss': 0.0167, 'grad_norm': 0.35112792985604174, 'learning_rate': 4.40107654570246e-06, 'epoch': 0.25}
+{'loss': 0.0117, 'grad_norm': 1.9495170662171284, 'learning_rate': 4.388695809468694e-06, 'epoch': 0.25}
+{'loss': 0.0077, 'grad_norm': 1.068774428441574, 'learning_rate': 4.376206210634696e-06, 'epoch': 0.25}
+{'loss': 0.0166, 'grad_norm': 4.728211229127232, 'learning_rate': 4.363608469088867e-06, 'epoch': 0.26}
+{'loss': 0.0098, 'grad_norm': 1.0187087925233156, 'learning_rate': 4.350903310952847e-06, 'epoch': 0.26}
+{'loss': 0.0111, 'grad_norm': 4.7093259465220125, 'learning_rate': 4.3380914685396675e-06, 'epoch': 0.26}
+{'loss': 0.0083, 'grad_norm': 4.64164528955561, 'learning_rate': 4.325173680311536e-06, 'epoch': 0.26}
+{'loss': 0.0126, 'grad_norm': 3.256067934232983, 'learning_rate': 4.3121506908372764e-06, 'epoch': 0.26}
+{'loss': 0.0232, 'grad_norm': 0.3021783102095733, 'learning_rate': 4.299023250749409e-06, 'epoch': 0.27}
+{'loss': 0.0082, 'grad_norm': 3.0584851831988016, 'learning_rate': 4.285792116700887e-06, 'epoch': 0.27}
+{'loss': 0.0158, 'grad_norm': 9.085850013900489, 'learning_rate': 4.272458051321484e-06, 'epoch': 0.27}
+{'loss': 0.0084, 'grad_norm': 0.2791631521532606, 'learning_rate': 4.259021823173836e-06, 'epoch': 0.27}
+{'loss': 0.0076, 'grad_norm': 2.280776417659761, 'learning_rate': 4.245484206709141e-06, 'epoch': 0.28}
+{'loss': 0.013, 'grad_norm': 4.103340612214938, 'learning_rate': 4.2318459822225215e-06, 'epoch': 0.28}
+{'loss': 0.0105, 'grad_norm': 3.221733819119991, 'learning_rate': 4.218107935808051e-06, 'epoch': 0.28}
+{'loss': 0.0108, 'grad_norm': 2.0335117861248464, 'learning_rate': 4.20427085931344e-06, 'epoch': 0.28}
+{'loss': 0.0094, 'grad_norm': 0.20495025085597826, 'learning_rate': 4.190335550294399e-06, 'epoch': 0.29}
+{'loss': 0.018, 'grad_norm': 2.6375590578383625, 'learning_rate': 4.1763028119686655e-06, 'epoch': 0.29}
+{'loss': 0.0196, 'grad_norm': 0.5192220985520025, 'learning_rate': 4.162173453169708e-06, 'epoch': 0.29}
+{'loss': 0.0112, 'grad_norm': 0.5733211130732555, 'learning_rate': 4.147948288300106e-06, 'epoch': 0.29}
+{'loss': 0.0122, 'grad_norm': 2.5862286305126627, 'learning_rate': 4.133628137284607e-06, 'epoch': 0.3}
+{'loss': 0.0106, 'grad_norm': 4.034796787111247, 'learning_rate': 4.119213825522868e-06, 'epoch': 0.3}
+{'loss': 0.01, 'grad_norm': 1.8605038819570574, 'learning_rate': 4.104706183841885e-06, 'epoch': 0.3}
+{'loss': 0.0094, 'grad_norm': 0.1316876961217551, 'learning_rate': 4.090106048448094e-06, 'epoch': 0.3}
+{'loss': 0.0141, 'grad_norm': 2.6368968703894313, 'learning_rate': 4.075414260879182e-06, 'epoch': 0.3}
+{'loss': 0.011, 'grad_norm': 3.0102928548924455, 'learning_rate': 4.060631667955579e-06, 'epoch': 0.31}
+{'loss': 0.0109, 'grad_norm': 1.7667876374788407, 'learning_rate': 4.045759121731647e-06, 'epoch': 0.31}
+{'loss': 0.0092, 'grad_norm': 0.01838643549150784, 'learning_rate': 4.030797479446571e-06, 'epoch': 0.31}
+{'loss': 0.0068, 'grad_norm': 4.53410428806296, 'learning_rate': 4.015747603474945e-06, 'epoch': 0.31}
+{'loss': 0.0042, 'grad_norm': 0.43365681651637616, 'learning_rate': 4.000610361277067e-06, 'epoch': 0.32}
+{'loss': 0.0118, 'grad_norm': 0.394360765172319, 'learning_rate': 3.985386625348943e-06, 'epoch': 0.32}
+{'loss': 0.0112, 'grad_norm': 2.7157054631733115, 'learning_rate': 3.970077273171989e-06, 'epoch': 0.32}
+{'loss': 0.0078, 'grad_norm': 2.0756749401078154, 'learning_rate': 3.954683187162462e-06, 'epoch': 0.32}
+{'loss': 0.0097, 'grad_norm': 2.679615670922219, 'learning_rate': 3.939205254620596e-06, 'epoch': 0.33}
+{'loss': 0.0134, 'grad_norm': 3.275994552678215, 'learning_rate': 3.923644367679456e-06, 'epoch': 0.33}
+{'loss': 0.0086, 'grad_norm': 2.546765105587693, 'learning_rate': 3.908001423253519e-06, 'epoch': 0.33}
+{'loss': 0.0079, 'grad_norm': 3.3858842579923816, 'learning_rate': 3.892277322986976e-06, 'epoch': 0.33}
+{'loss': 0.0066, 'grad_norm': 2.1368152942674628, 'learning_rate': 3.8764729732017634e-06, 'epoch': 0.34}
+{'loss': 0.0079, 'grad_norm': 1.528216299579097, 'learning_rate': 3.86058928484532e-06, 'epoch': 0.34}
+{'loss': 0.0087, 'grad_norm': 3.6323660856957813, 'learning_rate': 3.844627173438084e-06, 'epoch': 0.34}
+{'loss': 0.02, 'grad_norm': 0.4438359213812523, 'learning_rate': 3.828587559020725e-06, 'epoch': 0.34}
+{'loss': 0.0112, 'grad_norm': 0.762175836161865, 'learning_rate': 3.812471366101106e-06, 'epoch': 0.34}
+{'loss': 0.0119, 'grad_norm': 2.7125840963111316, 'learning_rate': 3.7962795236010062e-06, 'epoch': 0.35}
+{'loss': 0.0105, 'grad_norm': 3.7823519352296304, 'learning_rate': 3.7800129648025707e-06, 'epoch': 0.35}
+{'loss': 0.0101, 'grad_norm': 1.6667678684314895, 'learning_rate': 3.763672627294518e-06, 'epoch': 0.35}
+{'loss': 0.0073, 'grad_norm': 0.018701892966917828, 'learning_rate': 3.7472594529181045e-06, 'epoch': 0.35}
+{'loss': 0.0144, 'grad_norm': 6.564311947477758, 'learning_rate': 3.7307743877128298e-06, 'epoch': 0.36}
+{'loss': 0.0144, 'grad_norm': 0.4062313385266309, 'learning_rate': 3.714218381861913e-06, 'epoch': 0.36}
+{'loss': 0.0062, 'grad_norm': 0.824977507534963, 'learning_rate': 3.6975923896375225e-06, 'epoch': 0.36}
+{'loss': 0.0099, 'grad_norm': 0.08185312966792037, 'learning_rate': 3.6808973693457744e-06, 'epoch': 0.36}
+{'loss': 0.0047, 'grad_norm': 0.24890705267194618, 'learning_rate': 3.664134283271496e-06, 'epoch': 0.37}
+{'loss': 0.0101, 'grad_norm': 0.44930396948065493, 'learning_rate': 3.6473040976227587e-06, 'epoch': 0.37}
+{'loss': 0.0108, 'grad_norm': 0.5912694969108581, 'learning_rate': 3.6304077824751906e-06, 'epoch': 0.37}
+{'loss': 0.0112, 'grad_norm': 3.047943627272695, 'learning_rate': 3.6134463117160596e-06, 'epoch': 0.37}
+{'loss': 0.0045, 'grad_norm': 0.3980615839335156, 'learning_rate': 3.5964206629881395e-06, 'epoch': 0.37}
+{'loss': 0.0092, 'grad_norm': 0.31417180856038485, 'learning_rate': 3.5793318176333603e-06, 'epoch': 0.38}
+{'loss': 0.0134, 'grad_norm': 2.043240191634731, 'learning_rate': 3.5621807606362446e-06, 'epoch': 0.38}
+{'loss': 0.004, 'grad_norm': 2.672114895311436, 'learning_rate': 3.5449684805671334e-06, 'epoch': 0.38}
+{'loss': 0.0078, 'grad_norm': 4.131815838161946, 'learning_rate': 3.527695969525209e-06, 'epoch': 0.38}
+{'loss': 0.0081, 'grad_norm': 4.560097616416552, 'learning_rate': 3.510364223081304e-06, 'epoch': 0.39}
+{'loss': 0.0072, 'grad_norm': 1.5825253862139081, 'learning_rate': 3.4929742402205267e-06, 'epoch': 0.39}
+{'loss': 0.0049, 'grad_norm': 1.4445916313668707, 'learning_rate': 3.4755270232846737e-06, 'epoch': 0.39}
+{'loss': 0.009, 'grad_norm': 6.209423099634138, 'learning_rate': 3.4580235779144594e-06, 'epoch': 0.39}
+{'loss': 0.0163, 'grad_norm': 2.6768615344019424, 'learning_rate': 3.44046491299155e-06, 'epoch': 0.4}
+{'loss': 0.0064, 'grad_norm': 5.1952205527924304, 'learning_rate': 3.422852040580415e-06, 'epoch': 0.4}
+{'loss': 0.0085, 'grad_norm': 0.9352353618344622, 'learning_rate': 3.405185975869988e-06, 'epoch': 0.4}
+{'loss': 0.01, 'grad_norm': 2.6053340710306836, 'learning_rate': 3.3874677371151583e-06, 'epoch': 0.4}
+{'loss': 0.0065, 'grad_norm': 0.06303657515074175, 'learning_rate': 3.3696983455780758e-06, 'epoch': 0.41}
+{'loss': 0.0086, 'grad_norm': 0.2825930637106836, 'learning_rate': 3.3518788254692857e-06, 'epoch': 0.41}
+{'loss': 0.0144, 'grad_norm': 3.1418152502423258, 'learning_rate': 3.3340102038886985e-06, 'epoch': 0.41}
+{'loss': 0.0071, 'grad_norm': 0.27777068786775827, 'learning_rate': 3.3160935107663826e-06, 'epoch': 0.41}
+{'loss': 0.0125, 'grad_norm': 1.8757105088670034, 'learning_rate': 3.2981297788032075e-06, 'epoch': 0.41}
+{'loss': 0.0092, 'grad_norm': 0.28309977254880814, 'learning_rate': 3.2801200434113134e-06, 'epoch': 0.42}
+{'loss': 0.0072, 'grad_norm': 4.082393735437867, 'learning_rate': 3.2620653426544337e-06, 'epoch': 0.42}
