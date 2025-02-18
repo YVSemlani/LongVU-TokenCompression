@@ -3,7 +3,7 @@
 #SBATCH --job-name=longvu_eval_nextqa
 #SBATCH --output=/mnt/meg/yvs/LongVU/logs/eval_nextqa_%j.out
 #SBATCH --error=/mnt/meg/yvs/LongVU/logs/eval_nextqa_%j.err
-#SBATCH --gpus=2
+#SBATCH --gpus=8
 
 cd /mnt/meg/yvs/LongVU
 
@@ -22,4 +22,4 @@ echo "NUM_GPUS: $NUM_GPUS"
 export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
 # Add environment variable to enable work distribution across GPUs
 #export CUDA_VISIBLE_DEVICES=0,1
-torchrun --standalone --nnodes 1 --nproc_per_node $NUM_GPUS eval/eval_nextqa.py --data_path ./data/nextqa --version qwen --model_path checkpoints/longvu_cambrian_qwen
+torchrun --standalone --nnodes 1 --nproc_per_node $NUM_GPUS eval/eval_nextqa.py --data_path ./data/nextqa --version qwen --model_path checkpoints/longvu_cambrian_qwen_nextqa_ft/checkpoint-1066

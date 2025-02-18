@@ -16,15 +16,15 @@ longvu/train.py \
 --data_path $PATH_TO_JSON \
 --image_folder $PATH_TO_FOLDER \
 --spatiotemporal_compressor None \
---model_max_length 4096 \
+--model_max_length 8192 \
 --fp16 False \
 --bf16 True \
 --log_on_each_node False \
 --logging_dir /tmp/llava/test/ \
 --num_train_epochs 1 \
 --per_device_train_batch_size 1 \
---per_device_eval_batch_size 2 \
---gradient_accumulation_steps 4 \
+--per_device_eval_batch_size 4 \
+--gradient_accumulation_steps 1 \
 --save_steps 500 \
 --eval_steps 500 \
 --logging_steps 10 \
@@ -54,8 +54,8 @@ longvu/train.py \
 --query_num_list "[144]" \
 --resume True \
 --lowres_token 8 \
---video_fps 0.2 \
---highres False \
+--video_fps 1 \
+--highres True \
 --drop_threshold 0.8 \
 --deepspeed $DEEPSPEED_CONFIG_FILE \
 
