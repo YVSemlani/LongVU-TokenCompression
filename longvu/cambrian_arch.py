@@ -808,6 +808,714 @@ class CambrianMetaForCausalLM(ABC):
             selected_frame_indices_all,
         )
 
+    def prepare_inputs_labels_for_compressor(self, 
+                                             input_ids,
+                                             position_ids,
+                                             attention_mask,
+                                             past_key_values,
+                                             labels,
+                                             images,
+                                             image_aux_attention_masks_list=None,
+                                             image_sizes=None):
+        
+        # <<STEP 0. RETURNING IF THE VISION TOWER DOESN'T EXIST OR NO IMAGES OR STRANGE SHAPE>>
+        # vision_tower = self.get_vision_tower()
+        vision_tower_aux_list = self.get_model().get_vision_tower_aux_list()
+        if vision_tower_aux_list is None or images is None or input_ids.shape[1] == 1:
+            return (
+                None,                                           # 1. Originally input_ids, set to None since we're using embeddings
+                position_ids,                                   # 2. Position indices for tokens in the sequence
+                attention_mask,                                 # 3. Mask indicating which tokens should attend to which other tokens
+                past_key_values,                               # 4. Cached key/value tensors from previous forward passes
+                None,                                           # 5. Token embeddings including both text and processed image features
+                labels,                                        # 6. Labels for training, with IGNORE_INDEX for image tokens
+                None,                                           # 7. Final processed features from auxiliary vision towers (for SVA)
+                None,                                           # 8. Attention masks for the auxiliary vision features (for SVA)
+                None,                                           # 9. Final dimensions of processed images after unpadding
+                None,                                           # 10. Global context features for each image (for SVA)
+            )
+
+        ## <<STEP 1. COMPUTING SIMILARITY SCORES W.R.T DINO AND REMOVING THOSE THAT ARE TOO SIMILAR>>
+        image_aux_list = images
+
+        split_sizes = None
+
+        # calculate split sizes
+
+        # if statement checks if the first ele. is a python list in which case it would look as such:
+        # [[all frames of vid 1], [all frames of vid 2], ...]
+
+        # or it checks if the first ele. is a 5 dimensional tensor which would represent video data with dims
+        # (batch_size, # of frames, channels, height, width)
+        if type(image_aux_list[0]) is list or image_aux_list[0].ndim == 5:
+            split_sizes_ori = [
+                1 if image.ndim == 3 else image.shape[0] for image in image_aux_list[0]
+            ]
+            new_image_aux_list = []
+            for image_aux in image_aux_list:
+                if type(image_aux) is list:
+                    image_aux = [
+                        x.unsqueeze(0) if x.ndim == 3 else x for x in image_aux
+                    ]
+                concat_image_aux = torch.cat([image for image in image_aux], dim=0)
+                new_image_aux_list.append(concat_image_aux)
+
+            # encode all frames using dno
+            image_aux_features_dino = self.encode_images(
+                new_image_aux_list, encode_type="dino"
+            )
+            
+            # do similarity based frame selection
+            (
+                image_aux_features_dino,
+                split_sizes,
+                new_image_aux_list,
+                selected_frame_indices_all,
+            ) = self.select_frame(
+                image_aux_features_dino,
+                split_sizes_ori,
+                input_ids,
+                new_image_aux_list,
+                image_sizes,
+                threshold=getattr(self.get_model().config, "dino_threshold", 0.83),
+            )
+
+            # encode the frames we choose to keep using siglip
+            image_aux_features_siglip = self.encode_images(
+                new_image_aux_list, encode_type="siglip"
+            )
+
+            # make a list w. index 0 being siglip features and index 1 being dino features
+            image_aux_features_list = [
+                image_aux_features_siglip,
+                image_aux_features_dino,
+            ]
+
+            # bs is the shape of the siglip features array
+            bs = image_aux_features_list[0].shape[0]
+
+            # dtype is the datatype of the siglip features array
+            dtype = new_image_aux_list[0].dtype
+
+            # code for retaining the original dimensions of the frames
+            # looks like this:
+
+            """
+                frame_sizes = [
+                    (800, 600),  # Video 1, Frame 1
+                    (800, 600),  # Video 1, Frame 2 
+                    (800, 600),  # Video 1, Frame 3
+                    (1024, 768), # Video 2, Frame 1
+                    (1024, 768)  # Video 2, Frame 2
+                ]
+            """
+            frame_sizes = []
+            for i in range(len(image_sizes)):
+                for j in range(split_sizes[i]):
+                    frame_sizes.append(image_sizes[i])
+            
+            # reassign image_sizes from being just the dimensions of the N videos as depicted below
+            
+            """
+            image_sizes = [(800, 600), (1024, 768)]  # Dimensions for 2 videos
+            """
+
+            image_sizes = frame_sizes
+
+        # this is if we don't have either of the expected video data formats
+        else:
+            image_aux_features_list = self.encode_images(image_aux_list)
+            bs = image_aux_list[0].shape[0]
+            dtype = image_aux_list[0].dtype
+
+        # load the image token from config
+        # parameter that specifies the total number of tokens used to represent an image/frame
+        image_token_len = self.get_model().config.image_token_len
+
+        # load query num list from config
+        # parameter that specifies the number of query tokens for each query group being given in SVA
+        query_num_list = self.get_model().config.query_num_list
+
+        # assuming square output sqrt of the total # of tokens used to represent an image gives our side lengths
+        final_height = final_width = int(image_token_len**0.5)
+
+        # store high resolution and downsampled frames respectively
+        final_image_features_list = []
+        final_image_features_down_list = []
+
+        # only needed for sva
+        vision_tower_aux_feature_list_final = None
+        vision_tower_aux_attention_masks_list_final = None
+        global_context_feature_final = None
+
+        # trigger if the mm_projector_type is sva
+        # this should always trigger for us b/c i'm not sure how else to combine the two encoders...
+        if self.get_model().config.mm_projector_type == "sva":
+            vision_tower_aux_feature_list = []
+            vision_tower_aux_attention_masks_list = []
+            # get vision tokens from each vision tower
+            for aux_i in range(len(vision_tower_aux_list)):
+                image_aux_features = image_aux_features_list[aux_i]
+
+                image_aux_features = getattr(
+                    self.get_model(), "mm_projector_aux_{}".format(aux_i)
+                )(image_aux_features).to(dtype)
+                if aux_i == 0:
+                    global_context_feature = image_aux_features.mean(1).view(
+                        bs, 1, 1, -1
+                    )
+
+                vision_tower_aux_feature_list.append(image_aux_features)
+            input_mix_res = True
+            input_high_res = True
+
+            for query_group_i, query_num in enumerate(query_num_list):
+                query_features_i = (
+                    self.get_model()
+                    .vision_query[query_group_i, :]
+                    .view(1, 1, 1, -1)
+                    .expand(bs, query_num, -1, -1)
+                )
+                global_context_feature_i = global_context_feature.expand(
+                    -1, query_num, 1, -1
+                ).flatten(0, 1)
+                query_side_len = int(query_num**0.5)
+                if IS_XLA_AVAILABLE:
+                    (
+                        vision_tower_aux_feature_list_i,
+                        vision_tower_aux_attention_masks_list_i,
+                    ) = self.rearrange_vision_tower_features_train(
+                        vision_tower_aux_feature_list,
+                        image_aux_attention_masks_list,
+                        query_side_len,
+                    )
+                else:
+                    (
+                        vision_tower_aux_feature_list_i,
+                        vision_tower_aux_attention_masks_list_i,
+                    ) = self.rearrange_vision_tower_features_inference(
+                        vision_tower_aux_feature_list, query_side_len, image_sizes
+                    )
+
+                query_features_i = getattr(
+                    self.get_model(), "vision_sampler_{}".format(query_group_i)
+                )(
+                    query_features_i.flatten(0, 1),
+                    global_context_feature_i,
+                    *vision_tower_aux_feature_list_i,
+                    *vision_tower_aux_attention_masks_list_i,
+                )
+                query_features_i = query_features_i.view(bs, query_num, -1)
+
+                if split_sizes is not None:
+                    try:
+                        if "llama" in self.get_model().config.model_type:
+                            text_len = torch.where(input_ids[0] == 128002)[-1][0]
+                        else:
+                            text_len = torch.where(input_ids[0] == 151643)[-1][0]
+                    except:
+                        text_len = len(input_ids[0])
+                    max_visual_len = (
+                        self.get_model().config.tokenizer_model_max_length
+                        - text_len
+                        - getattr(self.get_model().config, "inference_max_length", 16)
+                    )
+                    max_num_frames = max(
+                        1,
+                        math.floor(max_visual_len // (final_height * final_width)),
+                    )
+                    max_num_frames_low = max(
+                        1,
+                        math.floor(
+                            max_visual_len
+                            // (self.get_model().config.lowres_token ** 2)
+                        ),
+                    )
+                    if split_sizes[0] < max_num_frames:
+                        input_mix_res = False
+                    elif split_sizes[0] > max_num_frames_low:
+                        input_mix_res = False
+                        input_high_res = False
+
+                # input_mix_res = False  # ablation
+
+                if (getattr(self.config, "highres", False)) and input_mix_res:
+                    _query_features_i = (
+                        query_features_i.permute(0, 2, 1)
+                        .contiguous()
+                        .view(bs, -1, query_side_len, query_side_len)
+                    )
+                    _query_features_i = F.interpolate(
+                        _query_features_i.float(),
+                        size=(
+                            self.get_model().config.lowres_token,
+                            self.get_model().config.lowres_token,
+                        ),
+                        mode="bilinear",
+                        align_corners=False,
+                    ).to(dtype=query_features_i.dtype)
+                    _query_features_i = (
+                        _query_features_i.permute(0, 2, 3, 1).contiguous().flatten(1, 2)
+                    )
+                    final_image_features_down_list.append(_query_features_i)
+
+                # interpolate to the final target size
+                if query_side_len != final_height:
+                    query_features_i = (
+                        query_features_i.permute(0, 2, 1)
+                        .contiguous()
+                        .view(bs, -1, query_side_len, query_side_len)
+                    )
+                    if input_high_res:
+                        query_features_i = F.interpolate(
+                            query_features_i.float(),
+                            size=(final_height, final_width),
+                            mode="bilinear",
+                            align_corners=False,
+                        ).to(dtype=query_features_i.dtype)
+                    else:
+                        query_features_i = F.interpolate(
+                            query_features_i.float(),
+                            size=(8, 8),
+                            mode="bilinear",
+                            align_corners=False,
+                        ).to(dtype=query_features_i.dtype)
+                    query_features_i = (
+                        query_features_i.permute(0, 2, 3, 1).contiguous().flatten(1, 2)
+                    )
+                final_image_features_list.append(query_features_i)
+
+            if IS_XLA_AVAILABLE:
+                (
+                    vision_tower_aux_feature_list_final,
+                    vision_tower_aux_attention_masks_list_final,
+                ) = self.rearrange_vision_tower_features_train(
+                    vision_tower_aux_feature_list,
+                    image_aux_attention_masks_list,
+                    final_height,
+                )
+                global_context_feature_final = global_context_feature.expand(
+                    -1, final_height * final_width, 1, -1
+                ).flatten(0, 1)
+        else:
+            final_image_features_list = image_aux_features_list
+
+        image_features = torch.cat(final_image_features_list, -1)
+
+        # IGNORING HOW SVA WORKS FOR NOW THESE ARE THE OUTPUT IMAGE FEATURES
+        image_features = self.get_model().mm_projector(image_features).to(dtype)
+
+        # MISC. IMAGE FEATURE PROCESSING
+
+        # Handle XLA (TPU) specific processing
+        if IS_XLA_AVAILABLE:
+            # Reshape image features to height x width dimensions
+            image_features = image_features.view(
+                image_features.shape[0], final_height, final_width, -1
+            )
+            # Add newline token expanded across height dimension
+            image_features = torch.cat(
+                (
+                    image_features,
+                    self.model.image_newline[None, None, None, :].expand(
+                        image_features.shape[0], final_height, 1, -1
+                    ),
+                ),
+                dim=2,
+            )
+            # Flatten spatial dimensions
+            image_features = image_features.flatten(1, 2)
+            # Set final size for each batch element
+            final_size = [(final_height, final_width)] * bs
+
+        # Handle non-XLA processing
+        else:
+            # Reshape image features to batch x height x width x channels
+            image_features = image_features.view(bs, final_height, final_width, -1)
+                
+            # Initialize lists to store processed features
+            image_features_unpadded = []
+            image_features_downsample = []
+            final_size = []
+
+            # Handle SVA specific processing
+            if self.get_model().config.mm_projector_type == "sva":
+                # Rearrange vision tower features for inference
+                (
+                    vision_tower_aux_feature_list_final,
+                    vision_tower_aux_attention_masks_list_final,
+                ) = self.rearrange_vision_tower_features_inference(
+                    vision_tower_aux_feature_list, final_height, image_sizes, unpad=True
+                )
+                global_context_feature_final = []
+
+            # Process each batch element
+            for batch_i in range(bs):
+                cur_image_feature = image_features[batch_i]
+                image_size = image_sizes[batch_i]
+
+                # Remove padding from current image features
+                cur_image_feature = unpad_image(
+                    cur_image_feature.unsqueeze(0), image_size
+                )
+
+                cur_h, cur_w = cur_image_feature.shape[1:3]
+                try:
+                    # Reshape to preserve spatial dimensions
+                    cur_image_feature = cur_image_feature.view(1, cur_h, cur_w, -1)
+                    final_size.append((cur_h, cur_w))
+                except:
+                    # Fallback handling for invalid images after unpadding
+                    cur_image_feature = image_features[batch_i].unsqueeze(0)
+                    image_size = image_sizes[batch_i]
+                    cur_h, cur_w = cur_image_feature.shape[1:3]
+                    cur_image_feature = cur_image_feature.view(1, cur_h, cur_w, -1)
+                    final_size.append((cur_h, cur_w))
+
+        # Add newline token to current image features
+        cur_image_feature = torch.cat(
+            (
+                cur_image_feature,
+                self.model.image_newline.view(1, 1, 1, -1)
+                .expand(1, cur_h, 1, -1)
+                .to(cur_image_feature.device),
+            ),
+            dim=2,
+        )
+
+        # Add frame position embeddings if enabled
+        if split_sizes is None and getattr(self.config, "frame_pos", False):
+            frame_pos = (
+                self.get_model()
+                .get_frame_pos(torch.arange(1))
+                .to(cur_image_feature.device)
+                .to(cur_image_feature.dtype)
+            )
+            cur_image_feature += frame_pos
+
+        # Flatten spatial dimensions and store processed features
+        cur_image_feature = cur_image_feature.flatten(1, 2)
+        image_features_unpadded.append(cur_image_feature.squeeze(0))
+
+        # Handle SVA specific global context
+        if self.get_model().config.mm_projector_type == "sva":
+            cur_global_context_feature = global_context_feature[batch_i].expand(
+                cur_h * cur_w, 1, -1
+            )
+            global_context_feature_final.append(cur_global_context_feature)
+                    
+        # Concatenate SVA global context features
+        if self.get_model().config.mm_projector_type == "sva":
+            global_context_feature_final = torch.cat(
+                global_context_feature_final, 0
+            )
+
+        # Raise error if trying to use image start/end tokens with mm_mlp_adapter tuning
+        if getattr(self.config, "tune_mm_mlp_adapter", False) and getattr(
+            self.config, "mm_use_im_start_end", False
+        ):
+            raise NotImplementedError
+
+        # RELEVANT CODE FROM PAST THE SVA SECTION OF PREPARE MULTIMODAL FUNCTION
+        # DOES NOT INCLUDE 3.2 & 3.3 COMPRESSION MECHANISMS FROM THE PAPER
+
+        # Store original values before modification
+        _labels = labels
+        _position_ids = position_ids 
+        _attention_mask = attention_mask
+
+        # Initialize attention mask if None - create boolean tensor of ones matching input_ids shape
+        if attention_mask is None:
+            attention_mask = torch.ones_like(input_ids, dtype=torch.bool)
+        else:
+            attention_mask = attention_mask.bool()
+
+        # Initialize position IDs if None - create ascending sequence from 0 to input length
+        if position_ids is None:
+            position_ids = torch.arange(
+                0, input_ids.shape[1], dtype=torch.long, device=input_ids.device
+            )
+
+        # Initialize labels if None - create tensor of IGNORE_INDEX values matching input_ids shape
+        if labels is None:
+            labels = torch.full_like(input_ids, IGNORE_INDEX)
+
+        # Store original input IDs before modification
+        _input_ids = input_ids
+
+        # Update attention mask to also attend to image token positions
+        attention_mask = attention_mask | (input_ids == IMAGE_TOKEN_INDEX)
+
+        # Remove padding from input IDs using attention mask
+        # For each batch element, keep only the tokens where attention mask is True
+        input_ids = [
+            cur_input_ids[cur_attention_mask]
+            for cur_input_ids, cur_attention_mask in zip(input_ids, attention_mask)
+        ]
+
+        # Similarly remove padding from labels using attention mask
+        # For each batch element, keep only the labels where attention mask is True
+        labels = [
+            cur_labels[cur_attention_mask]
+            for cur_labels, cur_attention_mask in zip(labels, attention_mask)
+        ]
+
+        # Initialize lists to store processed embeddings and labels
+        new_input_embeds = []
+        new_labels = []
+        image_token_indices_batch = []
+        cur_image_idx = 0
+
+        # Process each batch of input IDs
+        for batch_idx, cur_input_ids in enumerate(input_ids):
+            # Count number of image tokens in current batch
+            num_images = (cur_input_ids == IMAGE_TOKEN_INDEX).sum()
+
+            # If no image tokens, just embed text and continue to next batch
+            if num_images == 0:
+                cur_image_features = image_features[cur_image_idx] 
+                cur_input_embeds_1 = self.get_model().embed_tokens(cur_input_ids)
+                # Concatenate text embeddings with empty image features
+                cur_input_embeds = torch.cat(
+                    [cur_input_embeds_1, cur_image_features[0:0]], dim=0
+                )
+                new_input_embeds.append(cur_input_embeds)
+                new_labels.append(labels[batch_idx])
+                cur_image_idx += 1
+                continue
+
+            # Get indices of image tokens, adding start (-1) and end positions
+            image_token_indices = (
+                [-1]
+                + torch.where(cur_input_ids == IMAGE_TOKEN_INDEX)[0].tolist()
+                + [cur_input_ids.shape[0]]
+            )
+            # Store first image token index for this batch
+            image_token_indices_batch.append(
+                torch.where(cur_input_ids == IMAGE_TOKEN_INDEX)[0].tolist()[0]
+            )
+
+            # Split input IDs and labels between image tokens
+            cur_input_ids_noim = []
+            cur_labels = labels[batch_idx]
+            cur_labels_noim = []
+            for i in range(len(image_token_indices) - 1):
+                cur_input_ids_noim.append(
+                    cur_input_ids[
+                        image_token_indices[i] + 1 : image_token_indices[i + 1]
+                    ]
+                )
+                cur_labels_noim.append(
+                    cur_labels[image_token_indices[i] + 1 : image_token_indices[i + 1]]
+                )
+
+            # Get sizes of each text segment for later splitting
+            split_sizes = [x.shape[0] for x in cur_labels_noim]
+
+            # Embed all text segments at once
+            cur_input_embeds = self.get_model().embed_tokens(
+                torch.cat(cur_input_ids_noim)
+            )
+            # Split embedded text back into segments
+            cur_input_embeds_no_im = torch.split(cur_input_embeds, split_sizes, dim=0)
+
+            # Initialize lists for combined embeddings and labels
+            cur_new_input_embeds = []
+            cur_new_labels = []
+
+            # Calculate available space for visual tokens
+            text_len = sum([x.shape[0] for x in cur_input_embeds_no_im])
+            visual_len = len(image_features[cur_image_idx])
+            max_visual_len = (
+                self.get_model().config.tokenizer_model_max_length
+                - getattr(self.get_model().config, "inference_max_length", 16)
+                - text_len
+            )
+            # Flag for mixing high/low resolution tokens
+            mix_token = False
+
+        # Iterate through text segments and images, interleaving them
+            for i in range(num_images + 1):
+                # Add text segment embedding
+                cur_new_input_embeds.append(cur_input_embeds_no_im[i])
+                # Add corresponding text segment labels 
+                cur_new_labels.append(cur_labels_noim[i])
+
+                # After each text segment (except last), add image embedding
+                if i < num_images:
+                    # Get features for current image
+                    cur_image_features = image_features[cur_image_idx]
+                    cur_image_idx += 1
+                    # Add image features to embeddings
+                    cur_new_input_embeds.append(cur_image_features)
+                    # Create label tensor for image tokens filled with IGNORE_INDEX
+                    # Shape matches image feature length
+                    cur_new_labels.append(
+                        torch.full(
+                            (cur_image_features.shape[0],),  # Match image feature length
+                            IGNORE_INDEX,                    # Use ignore index for image tokens
+                            device=cur_labels.device,        # Match device of text labels
+                            dtype=cur_labels.dtype,         # Match dtype of text labels
+                        )
+                    )
+
+            # Move all embeddings to model device
+            cur_new_input_embeds = [x.to(self.device) for x in cur_new_input_embeds]
+
+            # Concatenate all text and image embeddings into single sequence
+            cur_new_input_embeds = torch.cat(cur_new_input_embeds)
+            # Concatenate all labels into single sequence
+            cur_new_labels = torch.cat(cur_new_labels)
+
+            # Add processed sequences to batch
+            new_input_embeds.append(cur_new_input_embeds)
+            new_labels.append(cur_new_labels)
+
+        # Truncate sequences to max length as image embeddings can make the sequence longer
+        # Gets the maximum sequence length from model config if specified, otherwise None
+        tokenizer_model_max_length = getattr(
+            self.config, "tokenizer_model_max_length", None
+        )
+
+        # If max length exists in config, truncate any sequences longer than this length
+        if tokenizer_model_max_length is not None:
+            new_input_embeds = [
+                x[:tokenizer_model_max_length] for x in new_input_embeds
+            ]
+            new_labels = [x[:tokenizer_model_max_length] for x in new_labels]
+
+        # Combine them
+        # Calculate required padding by finding longest sequence in batch
+        max_len = max(x.shape[0] for x in new_input_embeds)
+        batch_size = len(new_input_embeds)
+
+        # Initialize containers for padded sequences
+        # Will store the padded embedding sequences
+        new_input_embeds_padded = []
+        
+        # Create tensor for padded labels, filled with IGNORE_INDEX
+        # Shape is [batch_size, max_sequence_length]
+        new_labels_padded = torch.full(
+            (batch_size, max_len),
+            IGNORE_INDEX,
+            dtype=new_labels[0].dtype,
+            device=new_labels[0].device,
+        )
+
+        # Create tensor for attention masks, initialized to zeros
+        # Shape matches padded sequence dimensions
+        attention_mask = torch.zeros(
+            (batch_size, max_len),
+            dtype=attention_mask.dtype,
+            device=attention_mask.device,
+        )
+
+        # Create tensor for position IDs, initialized to zeros
+        # Used to track token positions in sequence
+        position_ids = torch.zeros(
+            (batch_size, max_len),
+            dtype=position_ids.dtype,
+            device=position_ids.device,
+        )
+
+        # Process each sequence in batch to apply appropriate padding
+        for i, (cur_new_embed, cur_new_labels) in enumerate(
+            zip(new_input_embeds, new_labels)
+        ):
+            cur_len = cur_new_embed.shape[0]
+
+            # Check padding direction from config (defaults to right padding)
+            if getattr(self.config, "tokenizer_padding_side", "right") == "left":
+                # For left padding:
+                # Add zeros at start of sequence
+                new_input_embeds_padded.append(
+                    torch.cat(
+                        (
+                            torch.zeros(
+                                (max_len - cur_len, cur_new_embed.shape[1]),
+                                dtype=cur_new_embed.dtype,
+                                device=cur_new_embed.device,
+                            ),
+                            cur_new_embed,
+                        ),
+                        dim=0,
+                    )
+                )
+                # Update corresponding labels, attention mask and positions
+                # Only if sequence has content (length > 0)
+                if cur_len > 0:
+                    new_labels_padded[i, -cur_len:] = cur_new_labels
+                    attention_mask[i, -cur_len:] = True
+                    position_ids[i, -cur_len:] = torch.arange(
+                        0,
+                        cur_len,
+                        dtype=position_ids.dtype,
+                        device=position_ids.device,
+                    )
+            else:
+                # For right padding:
+                # Add zeros at end of sequence
+                new_input_embeds_padded.append(
+                    torch.cat(
+                        (
+                            cur_new_embed,
+                            torch.zeros(
+                                (max_len - cur_len, cur_new_embed.shape[1]),
+                                dtype=cur_new_embed.dtype,
+                                device=cur_new_embed.device,
+                            ),
+                        ),
+                        dim=0,
+                    )
+                )
+                # Update corresponding labels, attention mask and positions
+                # Only if sequence has content (length > 0)
+                if cur_len > 0:
+                    new_labels_padded[i, :cur_len] = cur_new_labels
+                    attention_mask[i, :cur_len] = True
+                    position_ids[i, :cur_len] = torch.arange(
+                        0,
+                        cur_len,
+                        dtype=position_ids.dtype,
+                        device=position_ids.device,
+                    )
+
+        # Combine all padded embeddings into single tensor
+        # Shape becomes [batch_size, max_seq_length, embedding_dim]
+        new_input_embeds = torch.stack(new_input_embeds_padded, dim=0)
+
+        # Handle case where original labels were None
+        # Preserves None state if that was initial input
+        if _labels is None:
+            new_labels = None
+        else:
+            new_labels = new_labels_padded
+
+        # Handle case where original attention mask was None
+        # Preserves None state if that was initial input
+        if _attention_mask is None:
+            attention_mask = None
+        else:
+            attention_mask = attention_mask.to(dtype=_attention_mask.dtype)
+
+        # Handle case where original position IDs were None
+        # Preserves None state if that was initial input
+        if _position_ids is None:
+            position_ids = None
+
+        return (
+            None,                                           # 1. Originally input_ids, set to None since we're using embeddings
+            position_ids,                                   # 2. Position indices for tokens in the sequence
+            attention_mask,                                 # 3. Mask indicating which tokens should attend to which other tokens
+            past_key_values,                               # 4. Cached key/value tensors from previous forward passes
+            new_input_embeds,                              # 5. Token embeddings including both text and processed image features
+            new_labels,                                    # 6. Labels for training, with IGNORE_INDEX for image tokens
+            vision_tower_aux_feature_list_final,           # 7. Final processed features from auxiliary vision towers (for SVA)
+            vision_tower_aux_attention_masks_list_final,    # 8. Attention masks for the auxiliary vision features (for SVA)
+            final_size,                                    # 9. Final dimensions of processed images after unpadding
+            global_context_feature_final,                  # 10. Global context features for each image (for SVA)
+        )
+
     def prepare_inputs_labels_for_multimodal(
         self,
         input_ids,
