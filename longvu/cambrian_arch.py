@@ -1769,6 +1769,9 @@ class CambrianMetaForCausalLM(ABC):
         image_features = torch.cat(final_image_features_list, -1)
         image_features = self.get_model().mm_projector(image_features).to(dtype)
 
+        print("Return shapes in prepare_inputs_labels_for_multimodal:")
+        print(f"image_features: {image_features.shape}")
+
         if (getattr(self.config, "highres", False)) and input_mix_res:
             image_features_down = torch.cat(final_image_features_down_list, -1)
             image_features_down = (
@@ -2367,6 +2370,17 @@ class CambrianMetaForCausalLM(ABC):
 
         if _position_ids is None:
             position_ids = None
+
+        print(f"position_ids: {position_ids.shape if position_ids is not None else None}")
+        print(f"attention_mask: {attention_mask.shape if attention_mask is not None else None}")
+        print(f"past_key_values: {[p.shape if p is not None else None for p in past_key_values] if past_key_values is not None else None}")
+        print(f"new_input_embeds: {new_input_embeds.shape}")
+        print(f"new_labels: {new_labels.shape if new_labels is not None else None}")
+        print(f"vision_tower_aux_feature_list_final: {[f.shape for f in vision_tower_aux_feature_list_final] if vision_tower_aux_feature_list_final else None}")
+        print(f"vision_tower_aux_attention_masks_list_final: {[m.shape for m in vision_tower_aux_attention_masks_list_final] if vision_tower_aux_attention_masks_list_final else None}")
+        print(f"final_size: {final_size}")
+        print(f"global_context_feature_final: {global_context_feature_final.shape if global_context_feature_final is not None else None}")
+        print("--------------------------------\n\n")
 
         return (
             None,
