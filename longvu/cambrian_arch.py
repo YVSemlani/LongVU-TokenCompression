@@ -381,6 +381,13 @@ class CambrianMetaModel:
                     )
                 self.vision_query.data = mm_projector_weights["model.vision_query"]
             self.image_newline.data = mm_projector_weights["model.image_newline"]
+    def initialize_compressor(self, type="mamba"):
+        if type == "mamba":
+            self.compressor = MambaCompressor()
+        elif type == "ttt":
+            self.compressor = TTTCompressor()
+
+        return
 
 
 def unmask_attention_mask(mask, original_size):
@@ -1216,6 +1223,11 @@ class CambrianMetaForCausalLM(ABC):
         ):
             raise NotImplementedError
 
+
+        # COMPRESSORS HERE
+
+        image_features_unpadded = self.get_model().compressor(image_features_unpadded)
+
         # RELEVANT CODE FROM PAST THE SVA SECTION OF PREPARE MULTIMODAL FUNCTION
         # DOES NOT INCLUDE 3.2 & 3.3 COMPRESSION MECHANISMS FROM THE PAPER
 
@@ -1335,29 +1347,29 @@ class CambrianMetaForCausalLM(ABC):
             mix_token = False
 
         # Iterate through text segments and images, interleaving them
-            for i in range(num_images + 1):
-                # Add text segment embedding
-                cur_new_input_embeds.append(cur_input_embeds_no_im[i])
-                # Add corresponding text segment labels 
-                cur_new_labels.append(cur_labels_noim[i])
+        for i in range(num_images + 1):
+            # Add text segment embedding
+            cur_new_input_embeds.append(cur_input_embeds_no_im[i])
+            # Add corresponding text segment labels 
+            cur_new_labels.append(cur_labels_noim[i])
 
-                # After each text segment (except last), add image embedding
-                if i < num_images:
-                    # Get features for current image
-                    cur_image_features = image_features[cur_image_idx]
-                    cur_image_idx += 1
-                    # Add image features to embeddings
-                    cur_new_input_embeds.append(cur_image_features)
-                    # Create label tensor for image tokens filled with IGNORE_INDEX
-                    # Shape matches image feature length
-                    cur_new_labels.append(
-                        torch.full(
-                            (cur_image_features.shape[0],),  # Match image feature length
-                            IGNORE_INDEX,                    # Use ignore index for image tokens
-                            device=cur_labels.device,        # Match device of text labels
-                            dtype=cur_labels.dtype,         # Match dtype of text labels
-                        )
+            # After each text segment (except last), add image embedding
+            if i < num_images:
+                # Get features for current image
+                cur_image_features = image_features[cur_image_idx]
+                cur_image_idx += 1
+                # Add image features to embeddings
+                cur_new_input_embeds.append(cur_image_features)
+                # Create label tensor for image tokens filled with IGNORE_INDEX
+                # Shape matches image feature length
+                cur_new_labels.append(
+                    torch.full(
+                        (cur_image_features.shape[0],),  # Match image feature length
+                        IGNORE_INDEX,                    # Use ignore index for image tokens
+                        device=cur_labels.device,        # Match device of text labels
+                        dtype=cur_labels.dtype,         # Match dtype of text labels
                     )
+                )
 
             # Move all embeddings to model device
             cur_new_input_embeds = [x.to(self.device) for x in cur_new_input_embeds]
