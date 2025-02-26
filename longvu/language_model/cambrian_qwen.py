@@ -223,8 +223,6 @@ class CambrianQwenForCausalLM(Qwen2ForCausalLM, CambrianMetaForCausalLM):
 
         self.model = CambrianQwenModel(config)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
-
-        self.compressor_flag = self.model.compressor_status()
         # Initialize weights and apply final processing
         self.post_init()
 
@@ -256,8 +254,12 @@ class CambrianQwenForCausalLM(Qwen2ForCausalLM, CambrianMetaForCausalLM):
         highres_image_features = None
         frame_split_sizes = None
 
+        compressor_flag = self.get_model().compressor_status()
+
+        print("Compressor flag in forward pass: ", compressor_flag)
+
         if inputs_embeds is None:
-            if self.compressor_flag:
+            if compressor_flag:
                 print("Compressor flag is triggered in forward pass!")
                 (
                     input_ids,
@@ -430,8 +432,12 @@ class CambrianQwenForCausalLM(Qwen2ForCausalLM, CambrianMetaForCausalLM):
         if "inputs_embeds" in kwargs:
             raise NotImplementedError("`inputs_embeds` is not supported")
 
+        compressor_flag = self.get_model().compressor_status()
+
+        print("Compressor flag in generate pass: ", compressor_flag)
+
         if images is not None:
-            if self.compressor_flag:
+            if compressor_flag:
                 print("Compressor flag is triggered in generate pass!")
                 (
                         inputs,
