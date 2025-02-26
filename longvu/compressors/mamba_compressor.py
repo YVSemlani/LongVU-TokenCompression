@@ -5,6 +5,9 @@ from torch import nn
 from mamba_ssm import Mamba
 
 
+# PUT THE BIMAMBAS BACK
+
+
 class Attention(nn.Module):
     def __init__(
         self,
@@ -100,7 +103,7 @@ class MambaBlock(nn.Module):
             d_state=d_state,
             d_conv=d_conv,
             expand=expand,
-            bimamba=bimamba,
+            #bimamba=bimamba,
         )
         # self.mixer = Attention(
         #     d_model=d_model,
@@ -148,7 +151,7 @@ class MambaCompressorMultiScale(nn.Module):
                     d_state=d_state,
                     d_conv=d_conv,
                     expand=expand,
-                    bimamba=bimamba,
+                    #bimamba=bimamba,
                 )
                 for idx in range(n_layer)
             ]
@@ -220,7 +223,7 @@ class MambaCompressorQuery(nn.Module):
                     d_state=d_state,
                     d_conv=d_conv,
                     expand=expand,
-                    bimamba=bimamba,
+                    #bimamba=bimamba,
                 )
                 for idx in range(n_layer)
             ]
