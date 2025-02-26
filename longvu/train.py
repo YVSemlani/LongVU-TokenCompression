@@ -1059,6 +1059,10 @@ def train() -> None:
         data_args.image_token_len = model_args.image_token_len
         model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)
 
+        # initialize compressor
+        if model_args.spatiotemporal_compressor is not None:
+            model.get_model().initialize_compressor(model_args.spatiotemporal_compressor)
+
     total_params = sum(p.numel() for p in model.get_model().parameters())
     trainable_params = sum(
         p.numel() for p in model.get_model().parameters() if p.requires_grad

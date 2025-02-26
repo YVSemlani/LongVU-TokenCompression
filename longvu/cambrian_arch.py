@@ -21,6 +21,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from longvu.compressors.mamba_compressor import MambaCompressor
+from longvu.compressors.ttt_compressor import TTTCompressor
+
 from longvu.constants import (
     DEFAULT_IM_END_TOKEN,
     DEFAULT_IM_START_TOKEN,
@@ -163,6 +166,7 @@ class CambrianMetaModel:
                     torch.empty(config.hidden_size, dtype=self.dtype)
                 )
 
+        self.compressor = None
     def get_frame_pos(self, time_range):
         frame_pos = self.frame_pos.reshape(1, -1) * time_range.reshape(-1, 1).to(
             self.frame_pos.device
@@ -381,13 +385,24 @@ class CambrianMetaModel:
                     )
                 self.vision_query.data = mm_projector_weights["model.vision_query"]
             self.image_newline.data = mm_projector_weights["model.image_newline"]
+    
     def initialize_compressor(self, type="mamba"):
+        print("Initializing compressor!")
         if type == "mamba":
             self.compressor = MambaCompressor()
         elif type == "ttt":
             self.compressor = TTTCompressor()
+        else:
+            raise ValueError(f"Compressor type {type} not supported!")
 
         return
+
+    def compressor_status(self):
+        print("Checking compressor status!")
+        if self.compressor is not None:
+            return True
+        else:
+            return False
 
 
 def unmask_attention_mask(mask, original_size):
@@ -827,6 +842,9 @@ class CambrianMetaForCausalLM(ABC):
         
         # <<STEP 0. RETURNING IF THE VISION TOWER DOESN'T EXIST OR NO IMAGES OR STRANGE SHAPE>>
         # vision_tower = self.get_vision_tower()
+
+        print("Beginning prepare inputs labels for compressor!\n\n")
+        
         vision_tower_aux_list = self.get_model().get_vision_tower_aux_list()
         if vision_tower_aux_list is None or images is None or input_ids.shape[1] == 1:
             return (

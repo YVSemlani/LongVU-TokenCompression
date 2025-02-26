@@ -223,6 +223,8 @@ class CambrianQwenForCausalLM(Qwen2ForCausalLM, CambrianMetaForCausalLM):
 
         self.model = CambrianQwenModel(config)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+
+        self.compressor_flag = self.compressor_status()
         # Initialize weights and apply final processing
         self.post_init()
 
@@ -255,27 +257,52 @@ class CambrianQwenForCausalLM(Qwen2ForCausalLM, CambrianMetaForCausalLM):
         frame_split_sizes = None
 
         if inputs_embeds is None:
-            (
-                input_ids,
-                position_ids,
-                attention_mask,
-                past_key_values,
-                inputs_embeds,
-                labels,
-                vision_tower_aux_feature_list,
-                vision_tower_aux_attention_masks_list,
-                final_vision_feature_size,
-                global_context_feature,
-            ) = self.prepare_inputs_labels_for_multimodal(
-                input_ids,
-                position_ids,
-                attention_mask,
-                past_key_values,
-                labels,
-                images,
-                image_aux_attention_masks_list,
-                image_sizes,
-            )
+            if self.compressor_flag:
+                print("Compressor flag is triggered in forward pass!")
+                (
+                    input_ids,
+                    position_ids,
+                    attention_mask,
+                    past_key_values,
+                    inputs_embeds,
+                    labels,
+                    vision_tower_aux_feature_list,
+                    vision_tower_aux_attention_masks_list,
+                    final_vision_feature_size,
+                    global_context_feature,
+                ) = self.prepare_inputs_labels_for_compressor(
+                    input_ids,
+                    position_ids,
+                    attention_mask,
+                    past_key_values,
+                    labels,
+                    images,
+                    image_aux_attention_masks_list,
+                    image_sizes,
+                )
+            
+            else:
+                (
+                    input_ids,
+                    position_ids,
+                    attention_mask,
+                    past_key_values,
+                    inputs_embeds,
+                    labels,
+                    vision_tower_aux_feature_list,
+                    vision_tower_aux_attention_masks_list,
+                    final_vision_feature_size,
+                    global_context_feature,
+                ) = self.prepare_inputs_labels_for_multimodal(
+                    input_ids,
+                    position_ids,
+                    attention_mask,
+                    past_key_values,
+                    labels,
+                    images,
+                    image_aux_attention_masks_list,
+                    image_sizes,
+                )
 
         if dpo_forward:
             # pyre-fixme[29]: `CambrianQwenModel` is not a function.
@@ -404,26 +431,49 @@ class CambrianQwenForCausalLM(Qwen2ForCausalLM, CambrianMetaForCausalLM):
             raise NotImplementedError("`inputs_embeds` is not supported")
 
         if images is not None:
-            (
-                inputs,
-                position_ids,
-                attention_mask,
-                _,
-                inputs_embeds,
-                _,
-                vision_tower_aux_feature_list,
-                vision_tower_aux_attention_masks_list,
-                final_vision_feature_size,
-                global_context_feature,
-            ) = self.prepare_inputs_labels_for_multimodal(
-                inputs,
-                position_ids,
-                attention_mask,
-                None,
-                None,
-                images,
-                image_sizes=image_sizes,
-            )
+            if self.compressor_flag:
+                print("Compressor flag is triggered in generate pass!")
+                (
+                        inputs,
+                        position_ids,
+                        attention_mask,
+                        _,
+                        inputs_embeds,
+                    _,
+                    vision_tower_aux_feature_list,
+                    vision_tower_aux_attention_masks_list,
+                    final_vision_feature_size,
+                    global_context_feature,
+                ) = self.prepare_inputs_labels_for_compressor(
+                    inputs,
+                    position_ids,
+                    attention_mask,
+                    None,
+                    None,
+                    images,
+                    image_sizes=image_sizes,
+                )
+            else:
+                    (
+                        inputs,
+                        position_ids,
+                        attention_mask,
+                        _,
+                        inputs_embeds,
+                    _,
+                    vision_tower_aux_feature_list,
+                    vision_tower_aux_attention_masks_list,
+                    final_vision_feature_size,
+                    global_context_feature,
+                ) = self.prepare_inputs_labels_for_multimodal(
+                    inputs,
+                    position_ids,
+                    attention_mask,
+                    None,
+                    None,
+                    images,
+                    image_sizes=image_sizes,
+                )
             # pyre-fixme[16]: `CambrianQwenForCausalLM` has no attribute
             #  `vision_tower_aux_feature_list`.
             self.vision_tower_aux_feature_list = vision_tower_aux_feature_list
