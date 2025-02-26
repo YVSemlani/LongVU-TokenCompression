@@ -21,7 +21,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from longvu.compressors.mamba_compressor import MambaCompressor
+from longvu.compressors.mamba_compressor import MambaCompressorQuery
 from longvu.compressors.ttt_compressor import TTTCompressor
 
 from longvu.constants import (
@@ -389,7 +389,10 @@ class CambrianMetaModel:
     def initialize_compressor(self, type="mamba"):
         print("Initializing compressor!")
         if type == "mamba":
-            self.compressor = MambaCompressor()
+            self.compressor = MambaCompressorQuery(
+                d_model= 3584 #config.text_config.hidden_size,
+                # ADD THE REST OF THE ARGS BACK
+            )
         elif type == "ttt":
             self.compressor = TTTCompressor()
         else:
@@ -844,7 +847,7 @@ class CambrianMetaForCausalLM(ABC):
         # vision_tower = self.get_vision_tower()
 
         print("Beginning prepare inputs labels for compressor!\n\n")
-        
+
         vision_tower_aux_list = self.get_model().get_vision_tower_aux_list()
         if vision_tower_aux_list is None or images is None or input_ids.shape[1] == 1:
             return (
