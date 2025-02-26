@@ -3,7 +3,7 @@ BASE_DIR_CHECKPOINT="./checkpoints/"
 PREV_STAGE_CHECKPOINT="${BASE_DIR_CHECKPOINT}/longvu_cambrian_qwen" # checkpoint you're finetuning from
 PATH_TO_JSON="./data/nextqa/train-mlvu.json"
 PATH_TO_FOLDER="./data/nextqa/"
-OUTPUT_MODEL_FILENAME="${PREV_STAGE_CHECKPOINT}_nextqa_hp_ft"
+OUTPUT_MODEL_FILENAME="${PREV_STAGE_CHECKPOINT}_nextqa_mamba_debug"
 VERSION="qwen"
 
 DEEPSPEED_CONFIG_FILE="./deepspeed/zero2.json"
@@ -15,7 +15,7 @@ longvu/train.py \
 --output_model_filename $OUTPUT_MODEL_FILENAME \
 --data_path $PATH_TO_JSON \
 --image_folder $PATH_TO_FOLDER \
---spatiotemporal_compressor None \
+--spatiotemporal_compressor mamba \
 --model_max_length 4096 \
 --fp16 False \
 --bf16 True \

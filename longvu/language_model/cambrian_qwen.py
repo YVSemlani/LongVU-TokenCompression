@@ -224,7 +224,7 @@ class CambrianQwenForCausalLM(Qwen2ForCausalLM, CambrianMetaForCausalLM):
         self.model = CambrianQwenModel(config)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
 
-        self.compressor_flag = self.compressor_status()
+        self.compressor_flag = self.model.compressor_status()
         # Initialize weights and apply final processing
         self.post_init()
 

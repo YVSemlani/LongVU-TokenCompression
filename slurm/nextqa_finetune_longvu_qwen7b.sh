@@ -9,6 +9,8 @@ cd /mnt/meg/yvs/LongVU/
 
 pip install -r requirements.txt
 
+pip install --no-build-isolation mamba-ssm[causal-conv1d]
+
 pip install --upgrade "jinja2>=3.1.0"
 
 export NUM_GPUS=$SLURM_GPUS
