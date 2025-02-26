@@ -233,8 +233,15 @@ class MambaCompressorQuery(nn.Module):
             self.layers.to(torch.float32)
 
     def forward(self, space_time_tokens, hidden_states, question_states=None):
+        # space_time_tokens is video features w/ dimensins (# frames, # of tokens per frame, hidden dim.)
+        # we unsqueeze it to (# batch size, # frames, # of tokens per frame, hidden dim.)
 
+        # hidden_states is presumably your learnable query tokens of shape (# of learnable query tokens, hidden_dim)
+
+        space_time_tokens = space_time_tokens.unsqueeze(0)
         b, f, hw, c = space_time_tokens.shape
+
+        hidden_states = hidden_states.unsqueeze(0)
         n_query = hidden_states.shape[1]
         for mixer_block in self.layers:
             space_time_tokens = space_time_tokens.reshape(b, -1, c)

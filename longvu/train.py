@@ -108,6 +108,7 @@ class ModelArguments:
     frame_pos: bool = field(default=False)
     is_image_newline: bool = field(default=True)
     spatiotemporal_compressor: Optional[str] = field(default=None)
+    compression_factor: Optional[int] = field(default=None)
 
 
 @dataclass
@@ -1061,7 +1062,7 @@ def train() -> None:
 
         # initialize compressor
         if model_args.spatiotemporal_compressor is not None:
-            model.get_model().initialize_compressor(model_args.spatiotemporal_compressor)
+            model.get_model().initialize_compressor(compressor_type=model_args.spatiotemporal_compressor, compression_factor=model_args.compression_factor)
 
     total_params = sum(p.numel() for p in model.get_model().parameters())
     trainable_params = sum(

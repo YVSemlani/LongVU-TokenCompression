@@ -386,18 +386,23 @@ class CambrianMetaModel:
                 self.vision_query.data = mm_projector_weights["model.vision_query"]
             self.image_newline.data = mm_projector_weights["model.image_newline"]
     
-    def initialize_compressor(self, type="mamba"):
+    def initialize_compressor(self, compressor_type="mamba", compression_factor=2):
         print("Initializing compressor!")
-        if type == "mamba":
+        if compressor_type == "mamba":
             self.compressor = MambaCompressorQuery(
                 d_model= 3584 #config.text_config.hidden_size,
                 # ADD THE REST OF THE ARGS BACK
             )
-        elif type == "ttt":
+        elif compressor_type == "ttt":
             self.compressor = TTTCompressor()
         else:
-            raise ValueError(f"Compressor type {type} not supported!")
-
+            raise ValueError(f"Compressor type {compressor_type} not supported!")
+        
+        if compression_factor is not None:
+            self.compressor_avg_pooling = nn.AvgPool1d(kernel_size=compression_factor, stride=compression_factor)
+        else:
+            assert compression_factor is None, "Compression factor must be provided if compressor is provided!"
+        
         return
 
     def compressor_status(self):
@@ -1245,10 +1250,22 @@ class CambrianMetaForCausalLM(ABC):
             raise NotImplementedError
 
 
-        # COMPRESSORS HERE
+        # get learnable query tokens through average pooling
+        # combine the # frames dimension with the # of tokens dimension to get a flattened tensor of tokens 
+        flattened_image_features = image_features_unpadded.view(image_features_unpadded.shape[0] * image_features_unpadded.shape[1], -1)
 
-        image_features_unpadded = self.get_model().compressor(image_features_unpadded)
+        # swap the # of tokens dimension to the end of the tensor so average pooling is done at the token level
+        flattened_image_features = flattened_image_features.transpose(0, 1)
+        
+        # average pool over the total tokens dimension to get the learnable query tokens
+        learnable_query_tokens = self.compressor_avg_pooling(flattened_image_features)
+        
+        # undo the dimension switch # shape: (# of tokens, hidden_dim)
+        learnable_query_tokens = learnable_query_tokens.transpose(0, 1)
 
+        # put learnable query tokens + video features through compressor to get compressed video features
+        image_features_unpadded = self.get_model().compressor(image_features_unpadded, learnable_query_tokens)
+        
         # RELEVANT CODE FROM PAST THE SVA SECTION OF PREPARE MULTIMODAL FUNCTION
         # DOES NOT INCLUDE 3.2 & 3.3 COMPRESSION MECHANISMS FROM THE PAPER
 

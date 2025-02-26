@@ -16,6 +16,7 @@ longvu/train.py \
 --data_path $PATH_TO_JSON \
 --image_folder $PATH_TO_FOLDER \
 --spatiotemporal_compressor mamba \
+--compression_factor 2 \
 --model_max_length 4096 \
 --fp16 False \
 --bf16 True \
