@@ -851,6 +851,8 @@ class CambrianMetaForCausalLM(ABC):
         # <<STEP 0. RETURNING IF THE VISION TOWER DOESN'T EXIST OR NO IMAGES OR STRANGE SHAPE>>
         # vision_tower = self.get_vision_tower()
 
+        
+
         print("Beginning prepare inputs labels for compressor!\n\n")
 
         vision_tower_aux_list = self.get_model().get_vision_tower_aux_list()
@@ -1138,6 +1140,9 @@ class CambrianMetaForCausalLM(ABC):
         # IGNORING HOW SVA WORKS FOR NOW THESE ARE THE OUTPUT IMAGE FEATURES
         image_features = self.get_model().mm_projector(image_features).to(dtype)
 
+        print("Return shapes in prepare_inputs_labels_for_compressor:")
+        print(f"image_features: {image_features.shape}")
+
         # MISC. IMAGE FEATURE PROCESSING
 
         # Handle XLA (TPU) specific processing
@@ -1249,6 +1254,7 @@ class CambrianMetaForCausalLM(ABC):
         ):
             raise NotImplementedError
 
+        print("Image features unpadded shape before compression:", image_features_unpadded.shape)
 
         # get learnable query tokens through average pooling
         # combine the # frames dimension with the # of tokens dimension to get a flattened tensor of tokens 
@@ -1259,12 +1265,18 @@ class CambrianMetaForCausalLM(ABC):
         
         # average pool over the total tokens dimension to get the learnable query tokens
         learnable_query_tokens = self.compressor_avg_pooling(flattened_image_features)
+
+        print("Learnable query tokens shape before average pooling:", learnable_query_tokens.shape)
         
         # undo the dimension switch # shape: (# of tokens, hidden_dim)
         learnable_query_tokens = learnable_query_tokens.transpose(0, 1)
+        
+        print("Learnable query tokens shape after average pooling:", learnable_query_tokens.shape)
 
         # put learnable query tokens + video features through compressor to get compressed video features
         image_features_unpadded = self.get_model().compressor(image_features_unpadded, learnable_query_tokens)
+
+        print("Image features unpadded shape after compression:", image_features_unpadded.shape)
         
         # RELEVANT CODE FROM PAST THE SVA SECTION OF PREPARE MULTIMODAL FUNCTION
         # DOES NOT INCLUDE 3.2 & 3.3 COMPRESSION MECHANISMS FROM THE PAPER
@@ -1552,6 +1564,17 @@ class CambrianMetaForCausalLM(ABC):
         # Preserves None state if that was initial input
         if _position_ids is None:
             position_ids = None
+
+        print(f"position_ids: {position_ids.shape if position_ids is not None else None}")
+        print(f"attention_mask: {attention_mask.shape if attention_mask is not None else None}")
+        print(f"past_key_values: {[p.shape if p is not None else None for p in past_key_values] if past_key_values is not None else None}")
+        print(f"new_input_embeds: {new_input_embeds.shape}")
+        print(f"new_labels: {new_labels.shape if new_labels is not None else None}")
+        print(f"vision_tower_aux_feature_list_final: {[f.shape for f in vision_tower_aux_feature_list_final] if vision_tower_aux_feature_list_final else None}")
+        print(f"vision_tower_aux_attention_masks_list_final: {[m.shape for m in vision_tower_aux_attention_masks_list_final] if vision_tower_aux_attention_masks_list_final else None}")
+        print(f"final_size: {final_size}")
+        print(f"global_context_feature_final: {global_context_feature_final.shape if global_context_feature_final is not None else None}")
+        print("--------------------------------\n\n")
 
         return (
             None,                                           # 1. Originally input_ids, set to None since we're using embeddings
