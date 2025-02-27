@@ -167,6 +167,8 @@ class CambrianMetaModel:
                 )
 
         self.compressor = None
+        self.compressor_avg_pooling = None
+
     def get_frame_pos(self, time_range):
         frame_pos = self.frame_pos.reshape(1, -1) * time_range.reshape(-1, 1).to(
             self.frame_pos.device
@@ -398,10 +400,13 @@ class CambrianMetaModel:
         else:
             raise ValueError(f"Compressor type {compressor_type} not supported!")
         
-        if compression_factor is not None:
-            self.compressor_avg_pooling = nn.AvgPool1d(kernel_size=compression_factor, stride=compression_factor)
-        else:
-            assert compression_factor is None, "Compression factor must be provided if compressor is provided!"
+        assert compression_factor is not None, "Compression factor must be provided if compressor is provided!"
+        self.compressor_avg_pooling = nn.AvgPool1d(kernel_size=compression_factor, stride=compression_factor)
+
+        # set dtype to match the rest of hte model
+
+        self.compressor.to(dtype=torch.bfloat16)
+        self.compressor_avg_pooling.to(dtype=torch.bfloat16)
         
         return
 
@@ -1254,29 +1259,95 @@ class CambrianMetaForCausalLM(ABC):
         ):
             raise NotImplementedError
 
-        print("Image features unpadded shape before compression:", image_features_unpadded.shape)
+        if split_sizes is not None:
+            split_image_features = []
+            start_idx = 0
+            for split_batch_idx, split_size in enumerate(split_sizes):
+                if isinstance(image_features[start_idx : start_idx + split_size], list):
+                    if getattr(self.config, "frame_pos", False):
+                        frame_feature = torch.cat(
+                            image_features[start_idx : start_idx + split_size], dim=0
+                        ).reshape(split_size, -1, image_features[0].shape[-1])
+                        frame_pos = (
+                            self.get_model()
+                            .get_frame_pos(selected_frame_indices_all[split_batch_idx])
+                            .to(frame_feature.device)
+                            .to(frame_feature.dtype)
+                        )
+                        frame_feature += frame_pos
+                        split_image_features.append(
+                            frame_feature.reshape(-1, image_features[0].shape[-1])
+                        )
+                    else:
+                        split_image_features.append(
+                            torch.cat(
+                                image_features[start_idx : start_idx + split_size],
+                                dim=0,
+                            )
+                        )
+                else:
+                    if getattr(self.config, "frame_pos", False):
+                        frame_feature = image_features[
+                            start_idx : start_idx + split_size
+                        ].reshape(split_size, -1, image_features[0].shape[-1])
+                        frame_pos = (
+                            self.get_model()
+                            .get_frame_pos(selected_frame_indices_all[split_batch_idx])
+                            .to(frame_feature.device)
+                            .to(frame_feature.dtype)
+                        )
+                        frame_feature += frame_pos
+                        split_image_features.append(
+                            frame_feature.reshape(-1, image_features[0].shape[-1])
+                        )
+                    else:
+                        split_image_features.append(
+                            image_features[start_idx : start_idx + split_size]
+                        )
+                start_idx += split_size
+            
+            image_features = split_image_features
+            frame_split_sizes = split_sizes
+
+        print("Image features length:", len(image_features))
+        print("Printing shapes of all elements in image_features after padding process:")
+        for i, features in enumerate(image_features):
+            print(f"Element {i} shape:", features.shape)
+
+        # image_features is a list of tensors with each tensor being a batch element
+        # because almost all methods process a single video at a time (batch size = 1) we're going to just take the first element and pass it through the compressor
+
+        print("Image features shape before compression:", image_features[0].shape)
 
         # get learnable query tokens through average pooling
         # combine the # frames dimension with the # of tokens dimension to get a flattened tensor of tokens 
-        flattened_image_features = image_features_unpadded.view(image_features_unpadded.shape[0] * image_features_unpadded.shape[1], -1)
+        flattened_image_features = image_features[0].view(image_features[0].shape[0] * image_features[0].shape[1] * image_features[0].shape[2], -1)
 
         # swap the # of tokens dimension to the end of the tensor so average pooling is done at the token level
         flattened_image_features = flattened_image_features.transpose(0, 1)
+
+        print("Learnable query tokens shape before average pooling:", flattened_image_features.shape)
         
         # average pool over the total tokens dimension to get the learnable query tokens
-        learnable_query_tokens = self.compressor_avg_pooling(flattened_image_features)
-
-        print("Learnable query tokens shape before average pooling:", learnable_query_tokens.shape)
+        learnable_query_tokens = self.get_model().compressor_avg_pooling(flattened_image_features)
         
+        # convert dtype to match image features
+        learnable_query_tokens = learnable_query_tokens.to(image_features[0].dtype)
+
         # undo the dimension switch # shape: (# of tokens, hidden_dim)
         learnable_query_tokens = learnable_query_tokens.transpose(0, 1)
         
         print("Learnable query tokens shape after average pooling:", learnable_query_tokens.shape)
 
-        # put learnable query tokens + video features through compressor to get compressed video features
-        image_features_unpadded = self.get_model().compressor(image_features_unpadded, learnable_query_tokens)
+        # reshape image features to (# of frames, # of tokens per frame, hidden dim.)
+        compressor_input_image_features = image_features[0].view(image_features[0].shape[0], image_features[0].shape[1] * image_features[0].shape[2], -1)
 
-        print("Image features unpadded shape after compression:", image_features_unpadded.shape)
+        #print("Compressor dtype:", self.get_model().compressor.dtype)
+        
+        # put learnable query tokens + video features through compressor to get compressed video features
+        image_features[0] = self.get_model().compressor(compressor_input_image_features, learnable_query_tokens)
+
+        print("Image features shape after compression:", image_features[0].shape)
         
         # RELEVANT CODE FROM PAST THE SVA SECTION OF PREPARE MULTIMODAL FUNCTION
         # DOES NOT INCLUDE 3.2 & 3.3 COMPRESSION MECHANISMS FROM THE PAPER

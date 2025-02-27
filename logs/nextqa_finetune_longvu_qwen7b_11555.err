@@ -1,7 +1,7 @@
-[2025-02-26 16:10:00,883] torch.distributed.run: [WARNING] 
-[2025-02-26 16:10:00,883] torch.distributed.run: [WARNING] *****************************************
-[2025-02-26 16:10:00,883] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
-[2025-02-26 16:10:00,883] torch.distributed.run: [WARNING] *****************************************
+[2025-02-26 20:04:32,366] torch.distributed.run: [WARNING] 
+[2025-02-26 20:04:32,366] torch.distributed.run: [WARNING] *****************************************
+[2025-02-26 20:04:32,366] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2025-02-26 20:04:32,366] torch.distributed.run: [WARNING] *****************************************
 Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
 Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
 Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
@@ -59,9 +59,9 @@ You are adding a <class 'transformers.integrations.integration_utils.TensorBoard
 :DefaultFlowCallback
 TensorBoardCallback
   0%|          | 0/4267 [00:00<?, ?it/s]Traceback (most recent call last):
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1133, in <module>
+  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1135, in <module>
     train()
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1121, in train
+  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1123, in train
     trainer.train()
   File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 1932, in train
     return inner_training_loop(
@@ -85,17 +85,13 @@ TensorBoardCallback
     return forward_call(*args, **kwargs)
   File "/playpen-storage/yvs/LongVU/longvu/language_model/cambrian_qwen.py", line 275, in forward
     ) = self.prepare_inputs_labels_for_compressor(
-  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1250, in prepare_inputs_labels_for_compressor
-    image_features_unpadded = self.get_model().compressor(image_features_unpadded)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-TypeError: MambaCompressorQuery.forward() missing 1 required positional argument: 'hidden_states'
+  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1499, in prepare_inputs_labels_for_compressor
+    cur_new_input_embeds = torch.cat(cur_new_input_embeds)
+RuntimeError: Tensors must have same number of dimensions: got 2 and 3
 Traceback (most recent call last):
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1133, in <module>
+  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1135, in <module>
     train()
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1121, in train
+  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1123, in train
     trainer.train()
   File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 1932, in train
     return inner_training_loop(
@@ -119,17 +115,13 @@ Traceback (most recent call last):
     return forward_call(*args, **kwargs)
   File "/playpen-storage/yvs/LongVU/longvu/language_model/cambrian_qwen.py", line 275, in forward
     ) = self.prepare_inputs_labels_for_compressor(
-  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1250, in prepare_inputs_labels_for_compressor
-    image_features_unpadded = self.get_model().compressor(image_features_unpadded)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-TypeError: MambaCompressorQuery.forward() missing 1 required positional argument: 'hidden_states'
+  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1499, in prepare_inputs_labels_for_compressor
+    cur_new_input_embeds = torch.cat(cur_new_input_embeds)
+RuntimeError: Tensors must have same number of dimensions: got 2 and 3
 Traceback (most recent call last):
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1133, in <module>
+  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1135, in <module>
     train()
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1121, in train
+  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1123, in train
     trainer.train()
   File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 1932, in train
     return inner_training_loop(
@@ -153,155 +145,76 @@ Traceback (most recent call last):
     return forward_call(*args, **kwargs)
   File "/playpen-storage/yvs/LongVU/longvu/language_model/cambrian_qwen.py", line 275, in forward
     ) = self.prepare_inputs_labels_for_compressor(
-  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1250, in prepare_inputs_labels_for_compressor
-    image_features_unpadded = self.get_model().compressor(image_features_unpadded)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-TypeError: MambaCompressorQuery.forward() missing 1 required positional argument: 'hidden_states'
-Traceback (most recent call last):
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1133, in <module>
-    train()
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1121, in train
-    trainer.train()
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 1932, in train
-    return inner_training_loop(
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 2268, in _inner_training_loop
-    tr_loss_step = self.training_step(model, inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3307, in training_step
-    loss = self.compute_loss(model, inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3338, in compute_loss
-    outputs = model(**inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/utils/nvtx.py", line 15, in wrapped_fn
-    ret_val = func(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/runtime/engine.py", line 1814, in forward
-    loss = self.module(*inputs, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/playpen-storage/yvs/LongVU/longvu/language_model/cambrian_qwen.py", line 275, in forward
-    ) = self.prepare_inputs_labels_for_compressor(
-  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1250, in prepare_inputs_labels_for_compressor
-    image_features_unpadded = self.get_model().compressor(image_features_unpadded)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-TypeError: MambaCompressorQuery.forward() missing 1 required positional argument: 'hidden_states'
-Traceback (most recent call last):
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1133, in <module>
-    train()
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1121, in train
-    trainer.train()
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 1932, in train
-    return inner_training_loop(
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 2268, in _inner_training_loop
-    tr_loss_step = self.training_step(model, inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3307, in training_step
-    loss = self.compute_loss(model, inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3338, in compute_loss
-    outputs = model(**inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/utils/nvtx.py", line 15, in wrapped_fn
-    ret_val = func(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/runtime/engine.py", line 1814, in forward
-    loss = self.module(*inputs, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/playpen-storage/yvs/LongVU/longvu/language_model/cambrian_qwen.py", line 275, in forward
-    ) = self.prepare_inputs_labels_for_compressor(
-  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1250, in prepare_inputs_labels_for_compressor
-    image_features_unpadded = self.get_model().compressor(image_features_unpadded)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-TypeError: MambaCompressorQuery.forward() missing 1 required positional argument: 'hidden_states'
-Traceback (most recent call last):
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1133, in <module>
-    train()
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1121, in train
-    trainer.train()
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 1932, in train
-    return inner_training_loop(
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 2268, in _inner_training_loop
-    tr_loss_step = self.training_step(model, inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3307, in training_step
-    loss = self.compute_loss(model, inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3338, in compute_loss
-    outputs = model(**inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/utils/nvtx.py", line 15, in wrapped_fn
-    ret_val = func(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/runtime/engine.py", line 1814, in forward
-    loss = self.module(*inputs, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/playpen-storage/yvs/LongVU/longvu/language_model/cambrian_qwen.py", line 275, in forward
-    ) = self.prepare_inputs_labels_for_compressor(
-  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1250, in prepare_inputs_labels_for_compressor
-    image_features_unpadded = self.get_model().compressor(image_features_unpadded)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-TypeError: MambaCompressorQuery.forward() missing 1 required positional argument: 'hidden_states'
-Traceback (most recent call last):
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1133, in <module>
-    train()
-  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1121, in train
-    trainer.train()
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 1932, in train
-    return inner_training_loop(
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 2268, in _inner_training_loop
-    tr_loss_step = self.training_step(model, inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3307, in training_step
-    loss = self.compute_loss(model, inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3338, in compute_loss
-    outputs = model(**inputs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/utils/nvtx.py", line 15, in wrapped_fn
-    ret_val = func(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/runtime/engine.py", line 1814, in forward
-    loss = self.module(*inputs, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/playpen-storage/yvs/LongVU/longvu/language_model/cambrian_qwen.py", line 275, in forward
-    ) = self.prepare_inputs_labels_for_compressor(
-  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1250, in prepare_inputs_labels_for_compressor
-    image_features_unpadded = self.get_model().compressor(image_features_unpadded)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
-    return forward_call(*args, **kwargs)
-TypeError: MambaCompressorQuery.forward() missing 1 required positional argument: 'hidden_states'
+  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1499, in prepare_inputs_labels_for_compressor
+    cur_new_input_embeds = torch.cat(cur_new_input_embeds)
+RuntimeError: Tensors must have same number of dimensions: got 2 and 3
   0%|          | 0/4267 [00:04<?, ?it/s]
-[2025-02-26 16:11:10,946] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 1601914 closing signal SIGTERM
-[2025-02-26 16:11:10,946] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 1601915 closing signal SIGTERM
-[2025-02-26 16:11:10,946] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 1601918 closing signal SIGTERM
-[2025-02-26 16:11:10,947] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 1601921 closing signal SIGTERM
-[2025-02-26 16:11:12,378] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 2 (pid: 1601916) of binary: /usr/bin/python3
+Traceback (most recent call last):
+  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1135, in <module>
+    train()
+  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1123, in train
+    trainer.train()
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 1932, in train
+    return inner_training_loop(
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 2268, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3307, in training_step
+    loss = self.compute_loss(model, inputs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3338, in compute_loss
+    outputs = model(**inputs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/utils/nvtx.py", line 15, in wrapped_fn
+    ret_val = func(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/runtime/engine.py", line 1814, in forward
+    loss = self.module(*inputs, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/playpen-storage/yvs/LongVU/longvu/language_model/cambrian_qwen.py", line 275, in forward
+    ) = self.prepare_inputs_labels_for_compressor(
+  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1499, in prepare_inputs_labels_for_compressor
+    cur_new_input_embeds = torch.cat(cur_new_input_embeds)
+RuntimeError: Tensors must have same number of dimensions: got 2 and 3
+Traceback (most recent call last):
+  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1135, in <module>
+    train()
+  File "/playpen-storage/yvs/LongVU/longvu/train.py", line 1123, in train
+    trainer.train()
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 1932, in train
+    return inner_training_loop(
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 2268, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3307, in training_step
+    loss = self.compute_loss(model, inputs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/transformers/trainer.py", line 3338, in compute_loss
+    outputs = model(**inputs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/utils/nvtx.py", line 15, in wrapped_fn
+    ret_val = func(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/deepspeed/runtime/engine.py", line 1814, in forward
+    loss = self.module(*inputs, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/yvs/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/playpen-storage/yvs/LongVU/longvu/language_model/cambrian_qwen.py", line 275, in forward
+    ) = self.prepare_inputs_labels_for_compressor(
+  File "/playpen-storage/yvs/LongVU/longvu/cambrian_arch.py", line 1499, in prepare_inputs_labels_for_compressor
+    cur_new_input_embeds = torch.cat(cur_new_input_embeds)
+RuntimeError: Tensors must have same number of dimensions: got 2 and 3
+[2025-02-26 20:05:27,427] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 1714347 closing signal SIGTERM
+[2025-02-26 20:05:27,428] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 1714350 closing signal SIGTERM
+[2025-02-26 20:05:27,428] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 1714351 closing signal SIGTERM
+[2025-02-26 20:05:27,428] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 1714352 closing signal SIGTERM
+[2025-02-26 20:05:27,428] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 1714353 closing signal SIGTERM
+[2025-02-26 20:05:28,922] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 0 (pid: 1714346) of binary: /usr/bin/python3
 Traceback (most recent call last):
   File "/home/yvs/.local/bin/torchrun", line 8, in <module>
     sys.exit(main())
@@ -321,33 +234,26 @@ longvu/train.py FAILED
 ------------------------------------------------------------
 Failures:
 [1]:
-  time      : 2025-02-26_16:11:10
+  time      : 2025-02-26_20:05:27
   host      : megatron.ib
-  rank      : 3 (local_rank: 3)
-  exitcode  : 1 (pid: 1601917)
+  rank      : 2 (local_rank: 2)
+  exitcode  : 1 (pid: 1714348)
   error_file: <N/A>
   traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
 [2]:
-  time      : 2025-02-26_16:11:10
+  time      : 2025-02-26_20:05:27
   host      : megatron.ib
-  rank      : 5 (local_rank: 5)
-  exitcode  : 1 (pid: 1601919)
-  error_file: <N/A>
-  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
-[3]:
-  time      : 2025-02-26_16:11:10
-  host      : megatron.ib
-  rank      : 6 (local_rank: 6)
-  exitcode  : 1 (pid: 1601920)
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 1714349)
   error_file: <N/A>
   traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
 ------------------------------------------------------------
 Root Cause (first observed failure):
 [0]:
-  time      : 2025-02-26_16:11:10
+  time      : 2025-02-26_20:05:27
   host      : megatron.ib
-  rank      : 2 (local_rank: 2)
-  exitcode  : 1 (pid: 1601916)
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 1714346)
   error_file: <N/A>
   traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
 ============================================================

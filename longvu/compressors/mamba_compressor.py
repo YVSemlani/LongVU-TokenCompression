@@ -199,7 +199,7 @@ class MambaCompressorQuery(nn.Module):
         n_layer=1,
         use_norm=True,
         use_res=True,
-        fp32=True,
+        bf16=True,
         query_pos="inter",
         d_state=16,
         d_conv=4,
@@ -210,7 +210,7 @@ class MambaCompressorQuery(nn.Module):
     ):
         super().__init__()
         self.multi_scale = multi_scale
-        self.fp32 = fp32
+        self.bf16 = bf16
         self.query_pos = query_pos
         self.question_condition = question_condition
         self.layers = nn.ModuleList(
@@ -229,20 +229,23 @@ class MambaCompressorQuery(nn.Module):
             ]
         )
 
-        if fp32:
-            self.layers.to(torch.float32)
+        if bf16:
+            self.layers.to(torch.bfloat16)
 
     def forward(self, space_time_tokens, hidden_states, question_states=None):
         # space_time_tokens is video features w/ dimensins (# frames, # of tokens per frame, hidden dim.)
         # we unsqueeze it to (# batch size, # frames, # of tokens per frame, hidden dim.)
 
-        # hidden_states is presumably your learnable query tokens of shape (# of learnable query tokens, hidden_dim)
+        # hidden_states is presumably your learnable query tokens of shape (# of learnable query tokens, hidden dim.)
 
+        # adding batch dimension to space_time_tokens and hidden_states
         space_time_tokens = space_time_tokens.unsqueeze(0)
-        b, f, hw, c = space_time_tokens.shape
-
         hidden_states = hidden_states.unsqueeze(0)
+
+        # getting batch size, # frames, # of tokens per frame, hidden dim.
+        b, f, hw, c = space_time_tokens.shape
         n_query = hidden_states.shape[1]
+
         for mixer_block in self.layers:
             space_time_tokens = space_time_tokens.reshape(b, -1, c)
             if self.question_condition:
@@ -268,11 +271,12 @@ class MambaCompressorQuery(nn.Module):
                 mask[indices] = True
                 combined_tokens[:, mask] = hidden_states
                 combined_tokens[:, ~mask] = space_time_tokens
-            if self.fp32:
+            
+            if self.bf16:
                 dtype_prev = combined_tokens.dtype
-                combined_tokens = combined_tokens.to(torch.float32)
+                combined_tokens = combined_tokens.to(torch.bfloat16)
             combined_tokens = mixer_block(combined_tokens)
-            if self.fp32:
+            if self.bf16:
                 combined_tokens = combined_tokens.to(dtype_prev)
 
             if self.query_pos == "right":

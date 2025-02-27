@@ -838,7 +838,8 @@ def train() -> None:
     bnb_model_from_pretrained_args = {}
 
     # checking instation of spatiotemporal compressor
-    print(f"Spatiotemporal compressor: {model_args.spatiotemporal_compressor}")
+    print(f"Spatiotemporal compressor: {model_args.spatiotemporal_compressor}\n")
+    print(f"Compression factor: {model_args.compression_factor}\n")
 
     # pyre-fixme[16]: `DataClass` has no attribute `vision_tower`.
     if model_args.vision_tower_aux_list is not None:
